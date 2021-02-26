@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Life Balance</string>
+    <string name="actions">Actions</string>
+    <string name="chart">Chart</string>
+    <string name="empty_string"></string>
+    <string name="life_areas">Life Areas</string>
+</resources>
