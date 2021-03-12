@@ -35,6 +35,10 @@ public class LifeAreas extends Fragment {
     private Button changeLifeAreas;
     private Button saveLifeAreas;
     private Button restoreDefaults;
+    public String[] lifeAreasFromSharedPreferences;
+    public String yourLifeAreas;
+    public SharedPreferences sharedPreferences;
+    String[] defaultLifeAreas;
 
     //setting up constants to be used by SharedPreferences
     public static final String SHARED_PREFS = "shared prefs";
@@ -60,8 +64,8 @@ public class LifeAreas extends Fragment {
         final View root = inflater.inflate(R.layout.fragment_life_areas, container, false);
 
         //checking if SharedPreferences values exist
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
-        final String[] defaultLifeAreas = {getString(R.string.default_life_area_1),
+        sharedPreferences = getContext().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        defaultLifeAreas = new String[] {getString(R.string.default_life_area_1),
                 getString(R.string.default_life_area_2),
                 getString(R.string.default_life_area_3),
                 getString(R.string.default_life_area_4),
@@ -70,7 +74,7 @@ public class LifeAreas extends Fragment {
         };
 
         //setting up UI elements to be used by Java
-        //TODO: add EditTexts to an array instead of having individual EditTexts for each
+        //TODO: there is an array now instead of using individual EditTexts for each. Update rest of class accordingly
         lifeAreasDisplay = root.findViewById(R.id.displayLifeAreasTextView);
         /*lifeArea1EditText = root.findViewById(R.id.lifeArea1EditText);
         lifeArea2EditText = root.findViewById(R.id.lifeArea2EditText);
@@ -88,12 +92,12 @@ public class LifeAreas extends Fragment {
 
         Log.i(TAG, "Tag is working");
 
-        final String[] lifeAreasFromSharedPreferences = new String[] {sharedPreferences.getString(LIFE_AREA_1, defaultLifeAreas[0]),
+        /*String[] lifeAreasFromSharedPreferences = new String[] {sharedPreferences.getString(LIFE_AREA_1, defaultLifeAreas[0]),
                 sharedPreferences.getString(LIFE_AREA_2, defaultLifeAreas[1]),
                 sharedPreferences.getString(LIFE_AREA_3, defaultLifeAreas[2]),
                 sharedPreferences.getString(LIFE_AREA_4, defaultLifeAreas[3]),
                 sharedPreferences.getString(LIFE_AREA_5, defaultLifeAreas[4]),
-                sharedPreferences.getString(LIFE_AREA_6, defaultLifeAreas[5])};
+                sharedPreferences.getString(LIFE_AREA_6, defaultLifeAreas[5])};*/
 
         /*String lifeArea1 = sharedPreferences.getString(LIFE_AREA_1, defaultLifeAreas[0]);
         String lifeArea2 = sharedPreferences.getString(LIFE_AREA_2, defaultLifeAreas[1]);
@@ -110,43 +114,38 @@ public class LifeAreas extends Fragment {
         lifeArea5EditText.setText(lifeAreasFromSharedPreferences[4]);
         lifeArea6EditText.setText(lifeAreasFromSharedPreferences[5]);*/
 
-        for (int i = 0; i < lifeAreaEditTexts.length; i++) {
-            lifeAreaEditTexts[i].setText(lifeAreasFromSharedPreferences[i]);
-        }
-
         hideEditTexts();
         saveLifeAreas.setVisibility(GONE);
         restoreDefaults.setVisibility(GONE);
 
         //adding text to the LifeAreasDisplay TextView
-        lifeAreasDisplay.setText(getString(R.string.your_life_areas) + getString(R.string.new_line));
-        for (int i = 0; i < lifeAreasFromSharedPreferences.length; i++) {
-            lifeAreasDisplay.append(lifeAreasFromSharedPreferences[i] + getString(R.string.new_line));
-        }
+        setLifeAreasDisplay();
 
         restoreDefaults.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                //TODO: okay to use same counter variable multiple times?
+                //TODO: have I done this already?
                 for (int i = 0; i < lifeAreaEditTexts.length; i++) {
                     lifeAreaEditTexts[i].setText(defaultLifeAreas[i]);
                 }
-
                 /*lifeArea1EditText.setText(defaultLifeAreas[0]);
                 lifeArea2EditText.setText(defaultLifeAreas[1]);
                 lifeArea3EditText.setText(defaultLifeAreas[2]);
                 lifeArea4EditText.setText(defaultLifeAreas[3]);
                 lifeArea5EditText.setText(defaultLifeAreas[4]);
-                lifeArea6EditText.setText(defaultLifeAreas[5]);*/
+                lifeArea6EditText.setText(defaultLifeAreas[5]); */
             }
         });
 
         changeLifeAreas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                lifeAreasDisplay.setText("Your Life Areas");
+                lifeAreasDisplay.setText(yourLifeAreas);
 
                 for (int i = 0; i < lifeAreaEditTexts.length; i++) {
+                    lifeAreaEditTexts[i].setText(lifeAreasFromSharedPreferences[i]);
                     lifeAreaEditTexts[i].setVisibility(VISIBLE);
                 }
 
@@ -167,6 +166,9 @@ public class LifeAreas extends Fragment {
             public void onClick(View view) {
 
                 // getting String values entered by the user
+                /*for (int i = 0; i < lifeAreaEditTexts.length; i++) {
+                    lifeAreaEditTexts[i].setVisibility(VISIBLE);
+                }*/
                 String lifeAreaValue1 = lifeAreaEditTexts[0].getText().toString();
                 String lifeAreaValue2 = lifeAreaEditTexts[1].getText().toString();
                 String lifeAreaValue3 = lifeAreaEditTexts[2].getText().toString();
@@ -188,11 +190,19 @@ public class LifeAreas extends Fragment {
                     SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString(LIFE_AREA_1, lifeAreaValue1);
+
+                    /*editor.putString(lifeAreaValue2, LIFE_AREA_2);
+                    editor.putString(lifeAreaValue3, LIFE_AREA_3);
+                    editor.putString(lifeAreaValue4, LIFE_AREA_4);
+                    editor.putString(lifeAreaValue5, LIFE_AREA_5);
+                    editor.putString(lifeAreaValue6, LIFE_AREA_6);*/
+
                     editor.putString(LIFE_AREA_2, lifeAreaValue2);
                     editor.putString(LIFE_AREA_3, lifeAreaValue3);
                     editor.putString(LIFE_AREA_4, lifeAreaValue4);
                     editor.putString(LIFE_AREA_5, lifeAreaValue5);
                     editor.putString(LIFE_AREA_6, lifeAreaValue6);
+
                     editor.apply();
                     Log.i(TAG, "LIFE_AREA_5: " + LIFE_AREA_5);
                     Log.i(TAG, "lifeArea5: " + sharedPreferences.getString(LIFE_AREA_5, "somrthing"));
@@ -200,18 +210,7 @@ public class LifeAreas extends Fragment {
                     saveLifeAreas.setVisibility(GONE);
                     restoreDefaults.setVisibility(GONE);
                     changeLifeAreas.setVisibility(VISIBLE);
-                    lifeAreasDisplay.setText("Your Life Areas\n"
-                            + sharedPreferences.getString(LIFE_AREA_1, defaultLifeAreas[0])
-                            + "\n"
-                            + sharedPreferences.getString(LIFE_AREA_2, defaultLifeAreas[1])
-                            + "\n"
-                            + sharedPreferences.getString(LIFE_AREA_3, defaultLifeAreas[2])
-                            + "\n"
-                            + sharedPreferences.getString(LIFE_AREA_4, defaultLifeAreas[3])
-                            + "\n"
-                            + sharedPreferences.getString(LIFE_AREA_5, defaultLifeAreas[4])
-                            + "\n"
-                            + sharedPreferences.getString(LIFE_AREA_6, defaultLifeAreas[5]));
+                    setLifeAreasDisplay();
                 }
 
             }
@@ -247,6 +246,21 @@ public class LifeAreas extends Fragment {
          */
 
         return root;
+    }
+
+    public void setLifeAreasDisplay() {
+        //TODO: this is copied from Actions.java. Maybe make an abstract class and implement interfaces
+        lifeAreasFromSharedPreferences = new String[] {sharedPreferences.getString(LIFE_AREA_1, defaultLifeAreas[0]),
+                sharedPreferences.getString(LIFE_AREA_2, defaultLifeAreas[1]),
+                sharedPreferences.getString(LIFE_AREA_3, defaultLifeAreas[2]),
+                sharedPreferences.getString(LIFE_AREA_4, defaultLifeAreas[3]),
+                sharedPreferences.getString(LIFE_AREA_5, defaultLifeAreas[4]),
+                sharedPreferences.getString(LIFE_AREA_6, defaultLifeAreas[5])};
+
+        lifeAreasDisplay.setText(yourLifeAreas);
+        for (int i = 0; i < lifeAreasFromSharedPreferences.length; i++) {
+            lifeAreasDisplay.append(lifeAreasFromSharedPreferences[i] + getString(R.string.new_line));
+        }
     }
 
     public void hideEditTexts() {

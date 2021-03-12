@@ -23,6 +23,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
+//TODO: Tidy this and add comments and styling
+
 public class Actions extends Fragment implements AdapterView.OnItemSelectedListener {
 
     //setting up constants to be used by SharedPreferences
