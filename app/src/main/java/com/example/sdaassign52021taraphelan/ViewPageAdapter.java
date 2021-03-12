@@ -59,7 +59,7 @@ public class ViewPageAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         position = position+1;
 
-        CharSequence tabTitle = context.getString(R.string.empty_string);
+        CharSequence tabTitle;
 
         //finds the fragment
         switch (position)
@@ -76,6 +76,8 @@ public class ViewPageAdapter extends FragmentPagerAdapter {
                 //code
                 tabTitle = context.getString(R.string.life_areas);
                 break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + position);
         }
 
         return tabTitle;

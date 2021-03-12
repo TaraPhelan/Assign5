@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:text="TextView"
         app:layout_constraintBottom_toTopOf="@+id/lifeArea1EditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,12 +20,13 @@
 
     <EditText
         android:id="@+id/lifeArea1EditText"
+        android:labelFor="@string/default_life_area_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="textAutoCorrect"
         app:layout_constraintBottom_toTopOf="@+id/lifeArea2EditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,60 +34,65 @@
 
     <EditText
         android:id="@+id/lifeArea2EditText"
+        android:labelFor="@string/default_life_area_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="textAutoCorrect"
         app:layout_constraintBottom_toTopOf="@+id/lifeArea3EditText"
         app:layout_constraintTop_toBottomOf="@+id/lifeArea1EditText"
         tools:layout_editor_absoluteX="32dp" />
 
     <EditText
         android:id="@+id/lifeArea3EditText"
+        android:labelFor="@string/default_life_area_3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="textAutoCorrect"
         app:layout_constraintBottom_toTopOf="@+id/lifeArea4EditText"
         app:layout_constraintTop_toBottomOf="@+id/lifeArea2EditText"
         tools:layout_editor_absoluteX="32dp" />
 
     <EditText
         android:id="@+id/lifeArea4EditText"
+        android:labelFor="@string/default_life_area_4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="textAutoCorrect"
         app:layout_constraintBottom_toTopOf="@+id/lifeArea5EditText"
         app:layout_constraintTop_toBottomOf="@+id/lifeArea3EditText"
         tools:layout_editor_absoluteX="32dp" />
 
     <EditText
         android:id="@+id/lifeArea5EditText"
+        android:labelFor="@string/default_life_area_5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="textAutoCorrect"
         app:layout_constraintBottom_toTopOf="@+id/lifeArea6EditText"
         app:layout_constraintTop_toBottomOf="@+id/lifeArea4EditText"
         tools:layout_editor_absoluteX="32dp" />
 
     <EditText
         android:id="@+id/lifeArea6EditText"
+        android:labelFor="@string/default_life_area_6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="textAutoCorrect"
         app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintTop_toBottomOf="@+id/lifeArea5EditText"
         tools:layout_editor_absoluteX="32dp" />
@@ -97,7 +102,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
-        android:text="Save"
+        android:text="@string/save"
         app:layout_constraintBottom_toTopOf="@+id/button2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lifeArea6EditText" />
@@ -107,7 +112,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
-        android:text="Change"
+        android:text="@string/change"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button" />
@@ -117,7 +122,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
-        android:text="Return to Default"
+        android:text="@string/restore_defaults"
         app:layout_constraintBaseline_toBaselineOf="@+id/button"
         app:layout_constraintEnd_toStartOf="@+id/button" />
 
