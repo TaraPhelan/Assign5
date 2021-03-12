@@ -16,12 +16,18 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 //TODO: Tidy this and add comments and styling
 
@@ -42,6 +48,7 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
     public String[] defaultLifeAreas;
     public ArrayList<String> arrayList;
     public String[] lifeAreasFromSharedPreferences;
+    public final String TAG = "Actions";
 
     public Actions() {
         // Required empty public constructor
@@ -93,6 +100,69 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
 
         setUpSpinner();
 
+        //adding data to Cloud Firestore
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        // Add a new document with a generated id.
+        Map<String, Object> data = new HashMap<>();
+        data.put("name", "Tokyo");
+        data.put("country", "Japan");
+        db.collection("cities")
+                .add(data)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.i(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.i(TAG, "Error adding document", e);
+                    }
+                });
+
+        /*FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("cities").document("LA")
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                    }
+                });*/
+
+        /*FirebaseFirestore.getInstance()
+                .collection("books")
+                .whereEqualTo("title", title)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        Log.d(TAG, "Success - data was received");
+                        List<DocumentSnapshot> snapshotList = queryDocumentSnapshots.getDocuments();
+                        for (DocumentSnapshot snapshot: snapshotList) {
+                            Log.d(TAG, snapshot.toString());
+                            documentId = snapshot.getId();
+                            Log.d(TAG, documentId);
+                            //FirebaseFirestore.getInstance().collection("books").document(documentId).getPath()
+                            FirebaseFirestore.getInstance().collection("books").document(documentId).update("title", "Something Else");
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "On Failure: ", e);
+                    }
+                });*/
+
+        /* getting data back from Firebase
         DocumentReference docRef = FirebaseFirestore.getInstance().collection("health").document("yUFXrBaEkQJJP5eapbhV");
 
         // method obtained from https://www.youtube.com/watch?v=kfvOqGSCmW4
@@ -111,6 +181,7 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
                 }
             }
         });
+         */
 
         return root;
     }
