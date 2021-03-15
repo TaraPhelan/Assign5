@@ -119,6 +119,7 @@ public class LifeAreas extends Fragment {
         restoreDefaults.setVisibility(GONE);
 
         //adding text to the LifeAreasDisplay TextView
+        yourLifeAreas = getString(R.string.your_life_areas);
         setLifeAreasDisplay();
 
         restoreDefaults.setOnClickListener(new View.OnClickListener() {
