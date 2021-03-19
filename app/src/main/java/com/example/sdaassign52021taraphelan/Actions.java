@@ -100,27 +100,6 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
 
         setUpSpinner();
 
-        //adding data to Cloud Firestore
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        // Add a new document with a generated id.
-        Map<String, Object> data = new HashMap<>();
-        data.put("name", "Tokyo");
-        data.put("country", "Japan");
-        db.collection("cities")
-                .add(data)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.i(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.i(TAG, "Error adding document", e);
-                    }
-                });
-
         /*FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("cities").document("LA")
@@ -241,6 +220,29 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
         //required method implementation
+    }
+
+    public void addToCloudFirestore (View view) {
+        //adding data to Cloud Firestore
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        // Add a new document with a generated id.
+        Map<String, Object> data = new HashMap<>();
+        data.put("name", "Tokyo");
+        data.put("country", "Japan");
+        db.collection("cities")
+                .add(data)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.i(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.i(TAG, "Error adding document", e);
+                    }
+                });
     }
 
 }
