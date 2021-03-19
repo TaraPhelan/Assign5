@@ -1,11 +1,17 @@
 package com.example.sdaassign52021taraphelan;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.github.mikephil.charting.charts.RadarChart;
@@ -14,11 +20,30 @@ import com.github.mikephil.charting.data.RadarData;
 import com.github.mikephil.charting.data.RadarDataSet;
 import com.github.mikephil.charting.data.RadarEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
 public class Chart extends Fragment {
 
+    public int collectionSize [] = new int[6];
+    public final String TAG = "Chart";
+    public String[] lifeAreasFromSharedPreferences;
+    public SharedPreferences sharedPreferences;
+    public String[] defaultLifeAreas;
+
+    //setting up constants to be used by SharedPreferences
+    public static final String SHARED_PREFS = "shared prefs";
+    public static final String LIFE_AREA_1 = "life area 1";
+    public static final String LIFE_AREA_2 = "life area 2";
+    public static final String LIFE_AREA_3 = "life area 3";
+    public static final String LIFE_AREA_4 = "life area 4";
+    public static final String LIFE_AREA_5 = "life area 5";
+    public static final String LIFE_AREA_6 = "life area 6";
 
     public Chart() {
         // Required empty public constructor
@@ -30,37 +55,67 @@ public class Chart extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_chart, container, false);
 
-        //radar chart tutorial found at https://www.youtube.com/watch?v=Ii4FbRDvmqI
-        RadarChart radarChart = root.findViewById(R.id.radarChart);
+        Button button = root.findViewById(R.id.button4);
+        sharedPreferences = getContext().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        defaultLifeAreas = new String[] {getString(R.string.default_life_area_1),
+                getString(R.string.default_life_area_2),
+                getString(R.string.default_life_area_3),
+                getString(R.string.default_life_area_4),
+                getString(R.string.default_life_area_5),
+                getString(R.string.default_life_area_6)
+        };
 
-        RadarDataSet dataSet = new RadarDataSet(dataValues(), "Life Areas");
-        dataSet.setColor(Color.RED);
-        /*dataSet.setDrawHighlightCircleEnabled(true);
-        dataSet.setHighlightCircleFillColor(Color.BLUE);*/
+        lifeAreasFromSharedPreferences = new String[] {sharedPreferences.getString(LIFE_AREA_1, defaultLifeAreas[0]),
+                sharedPreferences.getString(LIFE_AREA_2, defaultLifeAreas[1]),
+                sharedPreferences.getString(LIFE_AREA_3, defaultLifeAreas[2]),
+                sharedPreferences.getString(LIFE_AREA_4, defaultLifeAreas[3]),
+                sharedPreferences.getString(LIFE_AREA_5, defaultLifeAreas[4]),
+                sharedPreferences.getString(LIFE_AREA_6, defaultLifeAreas[5])};
 
-        RadarData data = new RadarData();
-        data.addDataSet(dataSet);
-        String[] labels = {"health", "finances", "work", "family", "friends", "learning"};
-        XAxis xAxis = radarChart.getXAxis();
-        xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
-        radarChart.setData(data);
-        radarChart.getLegend().setEnabled(false);
-        radarChart.getDescription().setEnabled(false);
-        //radarChart.setWebAlpha(0);
-        //radarChart.setSkipWebLineCount(5);
-        //radarChart.setWebColorInner(Color.rgb(0, 255, 0));
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //adding data to Cloud Firestore
+                final FirebaseFirestore db = FirebaseFirestore.getInstance();
+                //getting the current collection size
+                db.collection("friends")
+                        .document("collectionSize")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot doc = task.getResult();
+                                    if (!(doc.get("numberOfDocuments") == null)) {
+                                        collectionSize[0] = Integer.parseInt(String.valueOf(doc.get("numberOfDocuments")));
+                                    } else {
+                                        collectionSize[0] = 0;
+                                    }
+                                    Log.i(TAG, "collectionSize[0] just before dataValues() = " + collectionSize[0]);
+                                    collectionSize[1] = 5;
+                                    collectionSize[2] = 3;
+                                    collectionSize[3] = 4;
+                                    collectionSize[4] = 7;
+                                    collectionSize[5] = 2;
+
+                                    Intent startActivity = new Intent(getContext(), RadarChartActivity.class);
+                                    startActivity.putExtra("radar chart data", collectionSize);
+                                    startActivity(startActivity);
+
+                                }
+
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.e(TAG, "On Failure: ", e);
+                            }
+                        });
+            }
+        });
 
         return root;
-    }
-
-    private ArrayList<RadarEntry> dataValues() {
-        ArrayList<RadarEntry> dataVals = new ArrayList<RadarEntry>();
-        dataVals.add(new RadarEntry(4));
-        dataVals.add(new RadarEntry(4));
-        dataVals.add(new RadarEntry(4));
-        dataVals.add(new RadarEntry(4));
-        dataVals.add(new RadarEntry(4));
-        dataVals.add(new RadarEntry(4));
-        return dataVals;
     }
 }

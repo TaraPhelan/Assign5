@@ -250,7 +250,7 @@ public class LifeAreas extends Fragment {
     }
 
     public void setLifeAreasDisplay() {
-        //TODO: this is copied from Actions.java. Maybe make an abstract class and implement interfaces
+        //TODO: this is copied from Actions.java and used again in Chart.java. Maybe make an abstract class and implement interfaces
         lifeAreasFromSharedPreferences = new String[] {sharedPreferences.getString(LIFE_AREA_1, defaultLifeAreas[0]),
                 sharedPreferences.getString(LIFE_AREA_2, defaultLifeAreas[1]),
                 sharedPreferences.getString(LIFE_AREA_3, defaultLifeAreas[2]),
