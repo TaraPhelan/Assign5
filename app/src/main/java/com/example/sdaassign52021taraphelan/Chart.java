@@ -31,7 +31,7 @@ public class Chart extends Fragment {
         View root = inflater.inflate(R.layout.fragment_chart, container, false);
 
         //radar chart tutorial found at https://www.youtube.com/watch?v=Ii4FbRDvmqI
-        RadarChart radarChart = root.findViewById(R.id.radar_chart);
+        RadarChart radarChart = root.findViewById(R.id.radarChart);
 
         RadarDataSet dataSet = new RadarDataSet(dataValues(), "Life Areas");
         dataSet.setColor(Color.RED);

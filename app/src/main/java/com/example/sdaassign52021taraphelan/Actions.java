@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -49,6 +51,7 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
     public ArrayList<String> arrayList;
     public String[] lifeAreasFromSharedPreferences;
     public final String TAG = "Actions";
+    public String actionedLifeArea;
 
     public Actions() {
         // Required empty public constructor
@@ -59,44 +62,88 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
                              Bundle savedInstanceState) {
         //innflating the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_actions, container, false);
-/*
-        //checking if SharedPreferences values exist
-        sharedPreferences = getContext().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
-        defaultLifeAreas = new String[] {getString(R.string.default_life_area_1),
-                getString(R.string.default_life_area_2),
-                getString(R.string.default_life_area_3),
-                getString(R.string.default_life_area_4),
-                getString(R.string.default_life_area_5),
-                getString(R.string.default_life_area_6)
-        };
 
-        lifeAreasFromSharedPreferences = new String[] {sharedPreferences.getString(LIFE_AREA_1, defaultLifeAreas[0]),
-                sharedPreferences.getString(LIFE_AREA_2, defaultLifeAreas[1]),
-                sharedPreferences.getString(LIFE_AREA_3, defaultLifeAreas[2]),
-                sharedPreferences.getString(LIFE_AREA_4, defaultLifeAreas[3]),
-                sharedPreferences.getString(LIFE_AREA_5, defaultLifeAreas[4]),
-                sharedPreferences.getString(LIFE_AREA_6, defaultLifeAreas[5])};
-        */
-/*
-        //spinner tutorial found at https://www.tutorialspoint.com/how-can-i-add-items-to-a-spinner-in-android
-        ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.add(sharedPreferences.getString(LIFE_AREA_1,defaultLifeAreas[0]));
-        arrayList.add(sharedPreferences.getString(LIFE_AREA_2,defaultLifeAreas[1]));
-        arrayList.add(sharedPreferences.getString(LIFE_AREA_3,defaultLifeAreas[2]));
-        arrayList.add(sharedPreferences.getString(LIFE_AREA_4,defaultLifeAreas[3]));
-        arrayList.add(sharedPreferences.getString(LIFE_AREA_5,defaultLifeAreas[4]));
-        arrayList.add(sharedPreferences.getString(LIFE_AREA_6,defaultLifeAreas[5]));
+        final EditText actionSummary = root.findViewById(R.id.actionSummary);
+        spinner = root.findViewById(R.id.spinner);
+        // TODO: change ids in all layouts
+        Button save = root.findViewById(R.id.saveAction);
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //adding data to Cloud Firestore
+                final FirebaseFirestore db = FirebaseFirestore.getInstance();
+                // Add a new document with a generated id.
+                Map<String, Object> data = new HashMap<>();
+                data.put(getString(R.string.action), actionSummary.getText().toString());
+
+                //getting the current collection size
+                db.collection("friends")
+                        .document("collectionSize")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot doc = task.getResult();
+                                    if (!(doc.get("numberOfDocuments") == null)) {
+                                        Log.i(TAG, String.valueOf(doc.get("numberOfDocuments")));
+                                        long newCollectionSize = (Long.parseLong(String.valueOf(doc.get("numberOfDocuments")))) + 1;
+
+                                                //((long) doc.get("numberOfDocuments")) + 1;
 
 
- */
-       spinner = root.findViewById(R.id.spinner);
-/*
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, arrayList);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(arrayAdapter);
-        spinner.setOnItemSelectedListener(this);
 
- */
+                                        FirebaseFirestore.getInstance().collection("friends")
+                                                .document("collectionSize").update("numberOfDocuments", newCollectionSize);
+                                        //Log.d ("Document", String.valueOf(doc.getData()));
+                                    } else {
+                                    Log.i(TAG, "else clause. " + String.valueOf(doc.get("numberOfDocuments")));
+
+                                        Map<String, Object> collectionSizeData = new HashMap<>();
+                                        collectionSizeData.put(getString(R.string.number_of_documents), "2");
+
+                                        db.collection("friends").document("collectionSize")
+                                                .set(collectionSizeData);
+
+                                    }
+
+                                    /*FirebaseFirestore.getInstance().collection("health")
+                                            .document("collectionSize").update("numberOfDocuments", 7);*/
+                                }
+
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.e(TAG, "On Failure: ", e);
+                            }
+                        });
+
+                db.collection(actionedLifeArea)
+                        .add(data)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Log.i(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+
+                                //clearing the EditText and clearing its focus before showing the success message
+                                actionSummary.getText().clear();
+                                actionSummary.clearFocus();
+                                Toast.makeText(getContext(), getString(R.string.success_message), Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.i(TAG, "Error adding document", e);
+                            }
+                        });
+
+            }
+        });
 
         setUpSpinner();
 
@@ -116,52 +163,6 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
                     }
                 });*/
 
-        /*FirebaseFirestore.getInstance()
-                .collection("books")
-                .whereEqualTo("title", title)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        Log.d(TAG, "Success - data was received");
-                        List<DocumentSnapshot> snapshotList = queryDocumentSnapshots.getDocuments();
-                        for (DocumentSnapshot snapshot: snapshotList) {
-                            Log.d(TAG, snapshot.toString());
-                            documentId = snapshot.getId();
-                            Log.d(TAG, documentId);
-                            //FirebaseFirestore.getInstance().collection("books").document(documentId).getPath()
-                            FirebaseFirestore.getInstance().collection("books").document(documentId).update("title", "Something Else");
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "On Failure: ", e);
-                    }
-                });*/
-
-        /* getting data back from Firebase
-        DocumentReference docRef = FirebaseFirestore.getInstance().collection("health").document("yUFXrBaEkQJJP5eapbhV");
-
-        // method obtained from https://www.youtube.com/watch?v=kfvOqGSCmW4
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot doc = task.getResult();
-                    String shriver = String.valueOf(doc.get("action"));
-                    if (doc.exists()) {
-                        Log.d ("Document", String.valueOf(doc.get("action")));
-                        //Log.d ("Document", String.valueOf(doc.getData()));
-                    } else {
-                        Log.d("Document", "No data");
-                    }
-                }
-            }
-        });
-         */
-
         return root;
     }
 
@@ -172,11 +173,11 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
         setUpSpinner();
     }
 
-    public void setUpSpinner () {
+    public void setUpSpinner() {
 
         //checking if SharedPreferences values exist
         sharedPreferences = getContext().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
-        defaultLifeAreas = new String[] {getString(R.string.default_life_area_1),
+        defaultLifeAreas = new String[]{getString(R.string.default_life_area_1),
                 getString(R.string.default_life_area_2),
                 getString(R.string.default_life_area_3),
                 getString(R.string.default_life_area_4),
@@ -184,7 +185,7 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
                 getString(R.string.default_life_area_6)
         };
 
-        lifeAreasFromSharedPreferences = new String[] {sharedPreferences.getString(LIFE_AREA_1, defaultLifeAreas[0]),
+        lifeAreasFromSharedPreferences = new String[]{sharedPreferences.getString(LIFE_AREA_1, defaultLifeAreas[0]),
                 sharedPreferences.getString(LIFE_AREA_2, defaultLifeAreas[1]),
                 sharedPreferences.getString(LIFE_AREA_3, defaultLifeAreas[2]),
                 sharedPreferences.getString(LIFE_AREA_4, defaultLifeAreas[3]),
@@ -213,36 +214,13 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        String text = adapterView.getItemAtPosition(i).toString();
-        Toast.makeText(adapterView.getContext(), text, Toast.LENGTH_SHORT).show();
+        actionedLifeArea = adapterView.getItemAtPosition(i).toString();
+        Toast.makeText(adapterView.getContext(), actionedLifeArea, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
         //required method implementation
-    }
-
-    public void addToCloudFirestore (View view) {
-        //adding data to Cloud Firestore
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        // Add a new document with a generated id.
-        Map<String, Object> data = new HashMap<>();
-        data.put("name", "Tokyo");
-        data.put("country", "Japan");
-        db.collection("cities")
-                .add(data)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.i(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.i(TAG, "Error adding document", e);
-                    }
-                });
     }
 
 }

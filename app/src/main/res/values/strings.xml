@@ -7,6 +7,7 @@
         <item>learning</item>
         <item>finances</item>
     </string-array>
+    <string name="action">action</string>
     <string name="action_prompt">What action did you take?</string>
     <string name="app_name">Life Balance</string>
     <string name="actions">Actions</string>
@@ -20,7 +21,9 @@
     <string name="default_life_area_6">finances</string>
     <string name="life_areas">Life Areas</string>
     <string name="new_line">\n</string>
+    <string name="number_of_documents">numberOfDocuments</string>
     <string name="restore_defaults">Restore Defaults</string>
     <string name="save">Save</string>
+    <string name="success_message">Your action has been saved!</string>
     <string name="your_life_areas">Your Life Areas\n</string>
 </resources>
