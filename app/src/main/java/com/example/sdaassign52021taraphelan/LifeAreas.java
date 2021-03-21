@@ -258,7 +258,9 @@ public class LifeAreas extends Fragment {
                 sharedPreferences.getString(LIFE_AREA_5, defaultLifeAreas[4]),
                 sharedPreferences.getString(LIFE_AREA_6, defaultLifeAreas[5])};
 
-        lifeAreasDisplay.setText(yourLifeAreas);
+        String newLine = getString(R.string.new_line);
+
+        lifeAreasDisplay.setText(yourLifeAreas + newLine + newLine);
         for (int i = 0; i < lifeAreasFromSharedPreferences.length; i++) {
             lifeAreasDisplay.append(lifeAreasFromSharedPreferences[i] + getString(R.string.new_line));
         }

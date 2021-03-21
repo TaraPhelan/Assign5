@@ -1,14 +1,6 @@
 <resources>
-    <string-array name="default_life_areas">
-        <item>health</item>
-        <item>family</item>
-        <item>work</item>
-        <item>friends</item>
-        <item>learning</item>
-        <item>finances</item>
-    </string-array>
     <string name="action">action</string>
-    <string name="action_prompt">What action did you take?</string>
+    <string name="action_hint">What action did you take?</string>
     <string name="app_name">Life Balance</string>
     <string name="actions">Actions</string>
     <string name="change">Change</string>
@@ -25,5 +17,6 @@
     <string name="restore_defaults">Restore Defaults</string>
     <string name="save">Save</string>
     <string name="success_message">Your action has been saved!</string>
-    <string name="your_life_areas">Your Life Areas\n</string>
+    <string name="view_chart">View Chart</string>
+    <string name="your_life_areas">Your Life Areas</string>
 </resources>

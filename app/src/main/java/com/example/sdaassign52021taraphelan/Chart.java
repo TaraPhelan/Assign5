@@ -35,6 +35,7 @@ public class Chart extends Fragment {
     public String[] lifeAreasFromSharedPreferences;
     public SharedPreferences sharedPreferences;
     public String[] defaultLifeAreas;
+    public int i;
 
     //setting up constants to be used by SharedPreferences
     public static final String SHARED_PREFS = "shared prefs";
@@ -75,44 +76,43 @@ public class Chart extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //adding data to Cloud Firestore
-                final FirebaseFirestore db = FirebaseFirestore.getInstance();
-                //getting the current collection size
-                db.collection("friends")
-                        .document("collectionSize")
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                for (i = 0; i < 5; i++) {
+                    Log.i(TAG, "i is " + String.valueOf(i));
+                    //adding data to Cloud Firestore
+                    final FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    //getting the current collection size
+                    db.collection(lifeAreasFromSharedPreferences[i])
+                            .document("collectionSize")
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                                if (task.isSuccessful()) {
-                                    DocumentSnapshot doc = task.getResult();
-                                    if (!(doc.get("numberOfDocuments") == null)) {
-                                        collectionSize[0] = Integer.parseInt(String.valueOf(doc.get("numberOfDocuments")));
-                                    } else {
-                                        collectionSize[0] = 0;
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot doc = task.getResult();
+                                        if (!(doc.get("numberOfDocuments") == null)) {
+                                            collectionSize[i] = Integer.parseInt(String.valueOf(doc.get("numberOfDocuments")));
+                                        } else {
+                                            collectionSize[i] = 0;
+                                        }
+                                        Log.i(TAG, String.valueOf(collectionSize[i]));
+
                                     }
-                                    Log.i(TAG, "collectionSize[0] just before dataValues() = " + collectionSize[0]);
-                                    collectionSize[1] = 5;
-                                    collectionSize[2] = 3;
-                                    collectionSize[3] = 4;
-                                    collectionSize[4] = 7;
-                                    collectionSize[5] = 2;
-
-                                    Intent startActivity = new Intent(getContext(), RadarChartActivity.class);
-                                    startActivity.putExtra("radar chart data", collectionSize);
-                                    startActivity(startActivity);
 
                                 }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.e(TAG, "On Failure: ", e);
+                                }
+                            });
 
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.e(TAG, "On Failure: ", e);
-                            }
-                        });
+                }
+
+                Intent startActivity = new Intent(getContext(), RadarChartActivity.class);
+                startActivity.putExtra("radar chart data", collectionSize);
+                startActivity(startActivity);
             }
         });
 

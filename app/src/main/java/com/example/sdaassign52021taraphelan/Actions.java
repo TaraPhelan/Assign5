@@ -78,7 +78,7 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
                 data.put(getString(R.string.action), actionSummary.getText().toString());
 
                 //getting the current collection size
-                db.collection("friends")
+                db.collection(actionedLifeArea)
                         .document("collectionSize")
                         .get()
                         .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -95,16 +95,16 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
 
 
 
-                                        FirebaseFirestore.getInstance().collection("friends")
+                                        FirebaseFirestore.getInstance().collection(actionedLifeArea)
                                                 .document("collectionSize").update("numberOfDocuments", newCollectionSize);
                                         //Log.d ("Document", String.valueOf(doc.getData()));
                                     } else {
                                     Log.i(TAG, "else clause. " + String.valueOf(doc.get("numberOfDocuments")));
 
                                         Map<String, Object> collectionSizeData = new HashMap<>();
-                                        collectionSizeData.put(getString(R.string.number_of_documents), "2");
+                                        collectionSizeData.put(getString(R.string.number_of_documents), "1");
 
-                                        db.collection("friends").document("collectionSize")
+                                        db.collection(actionedLifeArea).document("collectionSize")
                                                 .set(collectionSizeData);
 
                                     }

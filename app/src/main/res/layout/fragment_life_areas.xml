@@ -13,6 +13,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/lifeArea1EditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,7 +23,7 @@
 
     <EditText
         android:id="@+id/lifeArea1EditText"
-        android:labelFor="@string/default_life_area_1"
+        android:hint="@string/default_life_area_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -34,7 +37,7 @@
 
     <EditText
         android:id="@+id/lifeArea2EditText"
-        android:labelFor="@string/default_life_area_2"
+        android:hint="@string/default_life_area_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -47,7 +50,7 @@
 
     <EditText
         android:id="@+id/lifeArea3EditText"
-        android:labelFor="@string/default_life_area_3"
+        android:hint="@string/default_life_area_3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -60,7 +63,7 @@
 
     <EditText
         android:id="@+id/lifeArea4EditText"
-        android:labelFor="@string/default_life_area_4"
+        android:hint="@string/default_life_area_4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -73,7 +76,7 @@
 
     <EditText
         android:id="@+id/lifeArea5EditText"
-        android:labelFor="@string/default_life_area_5"
+        android:hint="@string/default_life_area_5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -86,7 +89,7 @@
 
     <EditText
         android:id="@+id/lifeArea6EditText"
-        android:labelFor="@string/default_life_area_6"
+        android:hint="@string/default_life_area_6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
