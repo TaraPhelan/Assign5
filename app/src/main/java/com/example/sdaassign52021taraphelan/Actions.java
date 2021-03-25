@@ -2,6 +2,7 @@ package com.example.sdaassign52021taraphelan;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -91,7 +93,7 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
                                         Log.i(TAG, String.valueOf(doc.get("numberOfDocuments")));
                                         long newCollectionSize = (Long.parseLong(String.valueOf(doc.get("numberOfDocuments")))) + 1;
 
-                                                //((long) doc.get("numberOfDocuments")) + 1;
+                                                    //((long) doc.get("numberOfDocuments")) + 1;
 
 
 
@@ -206,7 +208,7 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
         arrayList.add(sharedPreferences.getString(LIFE_AREA_5,defaultLifeAreas[4]));
         arrayList.add(sharedPreferences.getString(LIFE_AREA_6,defaultLifeAreas[5]));*/
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, arrayList);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview, arrayList);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(arrayAdapter);
         spinner.setOnItemSelectedListener(this);

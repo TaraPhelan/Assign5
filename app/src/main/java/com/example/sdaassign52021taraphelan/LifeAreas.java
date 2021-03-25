@@ -260,7 +260,11 @@ public class LifeAreas extends Fragment {
 
         String newLine = getString(R.string.new_line);
 
-        lifeAreasDisplay.setText(yourLifeAreas + newLine + newLine);
+        lifeAreasDisplay.setText(yourLifeAreas);
+        for (int newLineCounter = 0; newLineCounter < 2; newLineCounter ++) {
+            lifeAreasDisplay.append(newLine);
+        }
+
         for (int i = 0; i < lifeAreasFromSharedPreferences.length; i++) {
             lifeAreasDisplay.append(lifeAreasFromSharedPreferences[i] + getString(R.string.new_line));
         }
