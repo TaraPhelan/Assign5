@@ -60,22 +60,28 @@ public class RadarChartActivity extends AppCompatActivity {
         Intent startActivity = getIntent();
         Bundle extras = startActivity.getExtras();
         int[] dataFromIntent = extras.getIntArray("radar chart data");
-        Log.i(TAG, String.valueOf(dataFromIntent[0]));
-        Log.i(TAG, String.valueOf(dataFromIntent[1]));
-        dataVals.add(new RadarEntry(dataFromIntent[0]));
+        Log.i(TAG, "0 is " + String.valueOf(dataFromIntent[0]));
+        Log.i(TAG, "1 is " + String.valueOf(dataFromIntent[1]));
+        Log.i(TAG, "2 is " + String.valueOf(dataFromIntent[2]));
+        Log.i(TAG, "3 is " + String.valueOf(dataFromIntent[3]));
+        Log.i(TAG, "4 is " + String.valueOf(dataFromIntent[4]));
+        Log.i(TAG, "test");
+        int intFromIntent = extras.getInt("int");
+        Log.i(TAG, "the inte value received from the intent is " + intFromIntent);
+        /*dataVals.add(new RadarEntry(dataFromIntent[0]));
         dataVals.add(new RadarEntry(dataFromIntent[1]));
         dataVals.add(new RadarEntry(dataFromIntent[2]));
         dataVals.add(new RadarEntry(dataFromIntent[3]));
         dataVals.add(new RadarEntry(dataFromIntent[4]));
-        dataVals.add(new RadarEntry(dataFromIntent[5]));
+        dataVals.add(new RadarEntry(dataFromIntent[5]));*/
 
 
-        /*dataVals.add(new RadarEntry(4));
-        dataVals.add(new RadarEntry(4));
-        dataVals.add(new RadarEntry(4));
-        dataVals.add(new RadarEntry(4));
-        dataVals.add(new RadarEntry(4));
-        dataVals.add(new RadarEntry(4));*/
+        dataVals.add(new RadarEntry(2));
+        dataVals.add(new RadarEntry(7));
+        dataVals.add(new RadarEntry(3));
+        dataVals.add(new RadarEntry(6));
+        dataVals.add(new RadarEntry(5));
+        dataVals.add(new RadarEntry(1));
         return dataVals;
     }
 }
