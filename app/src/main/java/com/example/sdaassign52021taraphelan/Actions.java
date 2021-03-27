@@ -45,6 +45,12 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
     public static final String LIFE_AREA_4 = "life area 4";
     public static final String LIFE_AREA_5 = "life area 5";
     public static final String LIFE_AREA_6 = "life area 6";
+    public static final String COUNTER_1 = "counter 1";
+    public static final String COUNTER_2 = "counter 2";
+    public static final String COUNTER_3 = "counter 3";
+    public static final String COUNTER_4 = "counter 4";
+    public static final String COUNTER_5 = "counter 5";
+    public static final String COUNTER_6 = "counter 6";
 
     //setting up class-wide variables
     public Spinner spinner;
@@ -54,6 +60,8 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
     public String[] lifeAreasFromSharedPreferences;
     public final String TAG = "Actions";
     public String actionedLifeArea;
+    public int selectedSpinnerPosition;
+    public int newCollectionSizeInt;
 
     public Actions() {
         // Required empty public constructor
@@ -92,6 +100,7 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
                                     if (!(doc.get("numberOfDocuments") == null)) {
                                         Log.i(TAG, String.valueOf(doc.get("numberOfDocuments")));
                                         long newCollectionSize = (Long.parseLong(String.valueOf(doc.get("numberOfDocuments")))) + 1;
+                                        newCollectionSizeInt = (int) newCollectionSize;
 
                                                     //((long) doc.get("numberOfDocuments")) + 1;
 
@@ -111,8 +120,6 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
 
                                     }
 
-                                    /*FirebaseFirestore.getInstance().collection("health")
-                                            .document("collectionSize").update("numberOfDocuments", 7);*/
                                 }
 
                             }
@@ -130,6 +137,61 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
                             @Override
                             public void onSuccess(DocumentReference documentReference) {
                                 Log.i(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+
+                                Log.i(TAG, "selectedSpinnerPosition is " + selectedSpinnerPosition);
+                                Log.i(TAG, "newCollectionSizeInt is " + newCollectionSizeInt);
+
+
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                switch (selectedSpinnerPosition) {
+                                    case 0:
+                                        editor.putInt(COUNTER_1, newCollectionSizeInt);
+                                        break;
+                                    case 1:
+                                        editor.putInt(COUNTER_2, newCollectionSizeInt);
+                                        break;
+                                    case 2:
+                                        editor.putInt(COUNTER_3, newCollectionSizeInt);
+                                        break;
+                                    case 3:
+                                        editor.putInt(COUNTER_4, newCollectionSizeInt);
+                                        break;
+                                    case 4:
+                                        editor.putInt(COUNTER_5, newCollectionSizeInt);
+                                        break;
+                                    case 5:
+                                        editor.putInt(COUNTER_6, newCollectionSizeInt);
+                                        break;
+                                }
+
+                    /*editor.putString(lifeAreaValue2, LIFE_AREA_2);
+                    editor.putString(lifeAreaValue3, LIFE_AREA_3);
+                    editor.putString(lifeAreaValue4, LIFE_AREA_4);
+                    editor.putString(lifeAreaValue5, LIFE_AREA_5);
+                    editor.putString(lifeAreaValue6, LIFE_AREA_6);*/
+
+                                /*editor.putString(LIFE_AREA_2, lifeAreaValue2);
+                                editor.putString(LIFE_AREA_3, lifeAreaValue3);
+                                editor.putString(LIFE_AREA_4, lifeAreaValue4);
+                                editor.putString(LIFE_AREA_5, lifeAreaValue5);
+                                editor.putString(LIFE_AREA_6, lifeAreaValue6);*/
+
+                                editor.apply();
+                                Log.i(TAG, "the first counter from sharedpreferences is " + sharedPreferences.getInt(COUNTER_1, 22));
+
+                                Log.i(TAG, "the first counter from sharedpreferences phrased differently is " + String.valueOf(sharedPreferences.getInt(COUNTER_1, 16)));
+
+                                //TODO: update the shared preferences counter here using selectedSpinnerPosition (which follows index numbers)
+                                /*SharedPreferences.Editor editor = sharedPreferences.edit();
+                                countersFromSharedPreferences[selectedSpinnerPosition];
+
+                                editor.putString(LIFE_AREA_2, lifeAreaValue2);
+                                editor.putString(LIFE_AREA_3, lifeAreaValue3);
+                                editor.putString(LIFE_AREA_4, lifeAreaValue4);
+                                editor.putString(LIFE_AREA_5, lifeAreaValue5);
+                                editor.putString(LIFE_AREA_6, lifeAreaValue6);
+
+                                editor.apply(); */
 
                                 //clearing the EditText and clearing its focus before showing the success message
                                 actionSummary.getText().clear();
@@ -217,6 +279,9 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         actionedLifeArea = adapterView.getItemAtPosition(i).toString();
+
+        selectedSpinnerPosition = i;
+
         Toast.makeText(adapterView.getContext(), actionedLifeArea, Toast.LENGTH_SHORT).show();
     }
 
