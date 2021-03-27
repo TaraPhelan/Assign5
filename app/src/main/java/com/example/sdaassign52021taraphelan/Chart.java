@@ -176,6 +176,8 @@ public class Chart extends Fragment {
         radarChart.setData(data);
         radarChart.getLegend().setEnabled(false);
         radarChart.getDescription().setEnabled(false);
+        dataSet.setDrawFilled(true);
+        dataSet.setFillColor(Color.RED);
         //radarChart.setWebAlpha(0);
         //radarChart.setSkipWebLineCount(5);
         //radarChart.setWebColorInner(Color.rgb(0, 255, 0));
