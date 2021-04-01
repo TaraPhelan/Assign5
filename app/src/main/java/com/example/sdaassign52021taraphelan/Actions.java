@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +13,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,6 +35,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static android.view.View.GONE;
 
 //TODO: Tidy this and add comments and styling
 
@@ -77,6 +82,16 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
         spinner = root.findViewById(R.id.spinner);
         // TODO: change ids in all layouts
         Button save = root.findViewById(R.id.saveAction);
+        Button suggestionButton = root.findViewById(R.id.suggestionButton);
+        final LinearLayout suggestionLayout = root.findViewById(R.id.suggestionLayout);
+
+        suggestionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                suggestionLayout.setVisibility(GONE);
+            }
+        });
+
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,15 +117,14 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
                                         long newCollectionSize = (Long.parseLong(String.valueOf(doc.get("numberOfDocuments")))) + 1;
                                         newCollectionSizeInt = (int) newCollectionSize;
 
-                                                    //((long) doc.get("numberOfDocuments")) + 1;
-
+                                        //((long) doc.get("numberOfDocuments")) + 1;
 
 
                                         FirebaseFirestore.getInstance().collection(actionedLifeArea)
                                                 .document("collectionSize").update("numberOfDocuments", newCollectionSize);
                                         //Log.d ("Document", String.valueOf(doc.getData()));
                                     } else {
-                                    Log.i(TAG, "else clause. " + String.valueOf(doc.get("numberOfDocuments")));
+                                        Log.i(TAG, "else clause. " + String.valueOf(doc.get("numberOfDocuments")));
 
                                         Map<String, Object> collectionSizeData = new HashMap<>();
                                         collectionSizeData.put(getString(R.string.number_of_documents), "1");

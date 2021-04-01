@@ -7,16 +7,73 @@
     tools:context=".Actions"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/suggestionTextView"
+    <LinearLayout
+        android:id="@+id/suggestionLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorAccent"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_default="percent"
         app:layout_constraintHeight_percent="0.3"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/suggestionButton"
+            android:layout_width="50dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="right"
+            android:background="@drawable/suggestion_button_style" />
+
+        <TextView
+            android:id="@+id/suggestionLine1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:textSize="14sp"
+            android:gravity="bottom|start"
+            android:text="@string/suggestion_line_1"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/suggestionLine2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingRight="10dp"
+            android:text="TextView"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:gravity="top|end"
+            android:textColor="@color/colorPrimary" />
+
+        <TextView
+            android:id="@+id/suggestionLine3"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:textSize="14sp"
+            android:gravity="bottom|start"
+            android:text="@string/suggestion_line_2"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/suggestionLine4"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingRight="10dp"
+            android:text="TextView"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:gravity="top|end"
+            android:textColor="@color/colorPrimary" />
+    </LinearLayout>
 
     <Spinner
         android:id="@+id/spinner"
@@ -29,7 +86,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/suggestionTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/suggestionLayout" />
 
     <MultiAutoCompleteTextView
         android:id="@+id/actionSummary"

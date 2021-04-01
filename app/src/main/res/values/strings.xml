@@ -17,6 +17,8 @@
     <string name="restore_defaults">Restore Defaults</string>
     <string name="save">Save</string>
     <string name="success_message">Your action has been saved!</string>
+    <string name="suggestion_line_1">One area that needs attention is</string>
+    <string name="suggestion_line_2">A past action you\'ve taken is</string>
     <string name="view_chart">View Chart</string>
     <string name="your_life_areas">Your Life Areas</string>
 </resources>
