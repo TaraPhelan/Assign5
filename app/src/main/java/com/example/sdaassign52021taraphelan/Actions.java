@@ -56,6 +56,7 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
     public static final String COUNTER_4 = "counter 4";
     public static final String COUNTER_5 = "counter 5";
     public static final String COUNTER_6 = "counter 6";
+    public int[] countersFromSharedPreferences;
 
     //setting up class-wide variables
     public Spinner spinner;
@@ -63,10 +64,12 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
     public String[] defaultLifeAreas;
     public ArrayList<String> arrayList;
     public String[] lifeAreasFromSharedPreferences;
-    public final String TAG = "Actions";
+    public static final String TAG = "Actions";
     public String actionedLifeArea;
     public int selectedSpinnerPosition;
     public int newCollectionSizeInt;
+    public TextView suggestionLine2;
+    public LinearLayout suggestionLayout;
 
     public Actions() {
         // Required empty public constructor
@@ -83,7 +86,12 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
         // TODO: change ids in all layouts
         Button save = root.findViewById(R.id.saveAction);
         Button suggestionButton = root.findViewById(R.id.suggestionButton);
-        final LinearLayout suggestionLayout = root.findViewById(R.id.suggestionLayout);
+        suggestionLayout = root.findViewById(R.id.suggestionLayout);
+        suggestionLine2 = root.findViewById(R.id.suggestionLine2);
+
+        setUpSpinner();
+
+        setUpSuggestion();
 
         suggestionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -220,10 +228,10 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
                             }
                         });
 
+                setUpSuggestion();
+
             }
         });
-
-        setUpSpinner();
 
         /*FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -249,12 +257,12 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
 
         super.onResume();
         setUpSpinner();
+        setUpSuggestion();
     }
 
     public void setUpSpinner() {
 
-        //checking if SharedPreferences values exist
-        sharedPreferences = getContext().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        //setting up default life areas in case SharedPreferences have not been saved
         defaultLifeAreas = new String[]{getString(R.string.default_life_area_1),
                 getString(R.string.default_life_area_2),
                 getString(R.string.default_life_area_3),
@@ -262,6 +270,8 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
                 getString(R.string.default_life_area_5),
                 getString(R.string.default_life_area_6)
         };
+
+        sharedPreferences = getContext().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
 
         lifeAreasFromSharedPreferences = new String[]{sharedPreferences.getString(LIFE_AREA_1, defaultLifeAreas[0]),
                 sharedPreferences.getString(LIFE_AREA_2, defaultLifeAreas[1]),
@@ -290,6 +300,25 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
         spinner.setOnItemSelectedListener(this);
     }
 
+    public void setUpSuggestion() {
+        countersFromSharedPreferences = new int[]{sharedPreferences.getInt(COUNTER_1, 0),
+                sharedPreferences.getInt(COUNTER_2, 0),
+                sharedPreferences.getInt(COUNTER_3, 0),
+                sharedPreferences.getInt(COUNTER_4, 0),
+                sharedPreferences.getInt(COUNTER_5, 0),
+                sharedPreferences.getInt(COUNTER_6, 0)
+        };
+
+        //finding the life area with the fewest associated actions
+        int minValueIndex = getMin(countersFromSharedPreferences);
+        //hiding the suggestions display if there are no past actions to show
+        if (countersFromSharedPreferences[minValueIndex] == 0) {
+            suggestionLayout.setVisibility(GONE);
+        } else {
+            suggestionLine2.setText(lifeAreasFromSharedPreferences[minValueIndex]);
+        }
+    }
+
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         actionedLifeArea = adapterView.getItemAtPosition(i).toString();
@@ -302,6 +331,26 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
         //required method implementation
+    }
+
+    /**
+     * Method for getting the index at which the smallest int in an array is located.
+     * Adapted from https://beginnersbook.com/2014/07/java-finding-minimum-and-maximum-values-in-an-array/
+     *
+     * @param inputArray
+     * @return int - index at which the smallest int in the array is located
+     */
+    public static int getMin(int[] inputArray) {
+        int minValue = inputArray[0];
+        int arrayIndex = 0;
+        for (int i = 1; i < inputArray.length; i++) {
+            if (inputArray[i] < minValue) {
+                Log.i(TAG, "if clause, i is " + i + " and inputArray[i] is " + inputArray[i]);
+                minValue = inputArray[i];
+                arrayIndex = i;
+            }
+        }
+        return arrayIndex;
     }
 
 }
