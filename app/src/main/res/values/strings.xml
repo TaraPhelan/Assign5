@@ -11,6 +11,7 @@
     <string name="default_life_area_4">friends</string>
     <string name="default_life_area_5">learning</string>
     <string name="default_life_area_6">finances</string>
+    <string name="inspire_me">Inspire Me!</string>
     <string name="life_areas">Life Areas</string>
     <string name="new_line">\n</string>
     <string name="number_of_documents">numberOfDocuments</string>

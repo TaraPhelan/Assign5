@@ -1,6 +1,7 @@
 package com.example.sdaassign52021taraphelan;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -92,6 +93,7 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
         spinner = root.findViewById(R.id.spinner);
         // TODO: change ids in all layouts
         Button save = root.findViewById(R.id.saveAction);
+        Button inspireMe = root.findViewById(R.id.inspireMe);
         Button suggestionButton = root.findViewById(R.id.suggestionButton);
         suggestionLayout = root.findViewById(R.id.suggestionLayout);
         suggestionLine2 = root.findViewById(R.id.suggestionLine2);
@@ -99,6 +101,7 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
 
         setUpSpinner();
 
+        Log.i(TAG, "setUpSuggestion() being called from onCreateView()");
         setUpSuggestion();
 
         suggestionButton.setOnClickListener(new View.OnClickListener() {
@@ -161,7 +164,7 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
                                                 @Override
                                                 public void onSuccess(DocumentReference documentReference) {
                                                     Log.i(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-
+                                                    Log.i(TAG, "selectedSpinnerPosition is " + selectedSpinnerPosition);
                                                     Log.i(TAG, "selectedSpinnerPosition is " + selectedSpinnerPosition);
                                                     Log.i(TAG, "newCollectionSizeInt is " + newCollectionSizeInt);
 
@@ -201,6 +204,7 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
                                 editor.putString(LIFE_AREA_6, lifeAreaValue6);*/
 
                                                     editor.apply();
+                                                    Log.i("Chart", "editor.apply(called");
                                                     Log.i(TAG, "the first counter from sharedpreferences is " + sharedPreferences.getInt(COUNTER_1, 22));
 
                                                     Log.i(TAG, "the first counter from sharedpreferences phrased differently is " + String.valueOf(sharedPreferences.getInt(COUNTER_1, 16)));
@@ -221,6 +225,7 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
                                                     actionSummary.getText().clear();
                                                     actionSummary.clearFocus();
                                                     Toast.makeText(getContext(), getString(R.string.success_message), Toast.LENGTH_SHORT).show();
+                                                    Log.i(TAG, "setUpSuggestion() being called from onClick() after toast message");
                                                     setUpSuggestion();
                                                 }
                                             })
@@ -241,27 +246,16 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
                                 Log.e(TAG, "On Failure: ", e);
                             }
                         });
-
-                setUpSuggestion();
-
             }
         });
 
-        /*FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        db.collection("cities").document("LA")
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully written!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error writing document", e);
-                    }
-                });*/
+        inspireMe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), Inspiration.class);
+                startActivity(intent);
+            }
+        });
 
         return root;
     }
@@ -271,7 +265,6 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
 
         super.onResume();
         setUpSpinner();
-        setUpSuggestion();
     }
 
     public void setUpSpinner() {
@@ -327,42 +320,51 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
 
         //finding the life area with the fewest associated actions
         final int minValueIndex = getMin(countersFromSharedPreferences);
+        Log.i(TAG, "minValueIndex is " + minValueIndex);
         //hiding the suggestions display if there are no past actions to show
         if (countersFromSharedPreferences[minValueIndex] == 0) {
-            Log.i(TAG, "if clause in setUpSuggestion()");
+            Log.i(TAG, "if clause in setUpSuggestion(). Because countersFromSharedPreferences[minValueIndex] is 0, suggestions aren't being shown. Its value is " + countersFromSharedPreferences[minValueIndex] + " and the associated life area is " + lifeAreasFromSharedPreferences[minValueIndex]);
             suggestionLayout.setVisibility(GONE);
         } else {
-            Log.i(TAG, "else clause in setUpSuggestion()");
+            Log.i(TAG, "else clause in setUpSuggestion(), indicating the value of this counter is not zero. It is " + countersFromSharedPreferences[minValueIndex]);
             //suggestionLayout.setVisibility(VISIBLE);
+            Log.i(TAG, "Else clause. Suggestion should be visible with the life area " + lifeAreasFromSharedPreferences[minValueIndex]);
             suggestionLine2.setText(lifeAreasFromSharedPreferences[minValueIndex]);
 
             //getting a random number to choose a past action
             Random random = new Random();
-            final int randomNumber = random.nextInt((countersFromSharedPreferences[minValueIndex]) + 1);
-            Log.i(TAG, "randomNumber is " + randomNumber + " and minValueIndex is " + minValueIndex);
+            //1 is added to the counter because the radonm number will be between 0 (inclusive) and the argument (exclusive)
+            int randomNumber = random.nextInt(countersFromSharedPreferences[minValueIndex] + 1);
+            while (randomNumber == 0) {
+                randomNumber = random.nextInt(countersFromSharedPreferences[minValueIndex] + 1);
+            }
+            Log.i(TAG, "randomNumber is " + randomNumber + " and the counter for " + lifeAreasFromSharedPreferences[minValueIndex] + " is " + countersFromSharedPreferences[minValueIndex]);
 
             //retrieving data from Cloud Firestore. Amended from https://www.youtube.com/watch?v=DP1Bc8XmYWs
             FirebaseFirestore.getInstance()
                     .collection(lifeAreasFromSharedPreferences[minValueIndex])
-                    .whereEqualTo("incrementalId", String.valueOf(randomNumber))
+                    .whereEqualTo("incrementalId", randomNumber)
                     .get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            Log.i(TAG, "in onSuccess");
                             Log.i(TAG, "OnSuccess in setUpSuggestion()");
                             List<DocumentSnapshot> snapshotList = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot snapshot : snapshotList) {
                                 documentId = snapshot.getId();
                                 pastAction = (String) snapshot.get("action");
-                                Log.i(TAG, "randomnumber is " + randomNumber + "minValueIndex is " + minValueIndex + " past action is " + pastAction);
-                                suggestionLine4.setText(pastAction);
+                                Log.i(TAG, "minValueIndex is " + minValueIndex + " and life area is" + lifeAreasFromSharedPreferences[minValueIndex] + " and past action is " + pastAction);
                             }
                             if (pastAction == null) {
-                                //suggestionLayout.setVisibility(GONE);
+                                Log.i(TAG, "past action == null. It is " + pastAction);
+                                suggestionLayout.setVisibility(GONE);
                             } else {
+                                Log.i(TAG, "past action is not null. It is " + pastAction);
                                 suggestionLine4.setText(pastAction);
                                 //resetting pastAction to allow it to be reused
-                                //pastAction = null;
+                                pastAction = null;
+                                suggestionLayout.setVisibility(VISIBLE);
                             }
                         }
                     })
@@ -453,7 +455,6 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
         int arrayIndex = 0;
         for (int i = 1; i < inputArray.length; i++) {
             if (inputArray[i] < minValue) {
-                Log.i(TAG, "if clause, i is " + i + " and inputArray[i] is " + inputArray[i]);
                 minValue = inputArray[i];
                 arrayIndex = i;
             }

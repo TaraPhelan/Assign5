@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import com.github.mikephil.charting.charts.RadarChart;
@@ -173,17 +174,34 @@ public class Chart extends Fragment {
         //String[] labels = {"health", "finances", "work", "family", "friends", "learning"};
         XAxis xAxis = radarChart.getXAxis();
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
+        //xAxis.setDrawLabels(false);
+        //xAxis.setDrawGridLines(false);
+        xAxis.setTextSize(14);
         radarChart.setData(data);
         radarChart.getLegend().setEnabled(false);
         radarChart.getDescription().setEnabled(false);
+
+
+        //radarChart.setWebColorInner(Color.argb(1, 0, 0, 0));
+        //radarChart.setWebAlpha(100);
+        //radarChart.setWebAlpha(100%);
+        //radarChart.setWebColorInner(Color.BLUE);
         dataSet.setDrawFilled(true);
+        dataSet.setDrawValues(false);
+        //dataSet.setFillAlpha(250);
+        //dataSet.setFillColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null));
         dataSet.setFillColor(Color.RED);
+        //dataSet.setColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null));
+        //radarChart.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.suvaGrey, null));
         //radarChart.setWebAlpha(0);
         //radarChart.setSkipWebLineCount(5);
         //radarChart.setWebColorInner(Color.rgb(0, 255, 0));
+        //TODO: look at https://weeklycoding.com/mpandroidchart-documentation/
 
         return root;
     }
+
+    //TODO: explore https://weeklycoding.com/mpandroidchart-documentation/general-settings-styling/ for refreshing in lifecycle methods
 
     private ArrayList<RadarEntry> dataValues() {
         Log.i(TAG, "in datavalues");
