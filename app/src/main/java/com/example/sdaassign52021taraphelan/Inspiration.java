@@ -25,6 +25,7 @@ public class Inspiration extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        //YouTube video player tutorial found at https://www.youtube.com/watch?v=yyduqrCpKGg
         youTubePlayerView = findViewById(R.id.youtubePlayer);
         getLifecycle().addObserver(youTubePlayerView);
 

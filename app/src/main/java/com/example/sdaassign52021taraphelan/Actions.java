@@ -1,5 +1,6 @@
 package com.example.sdaassign52021taraphelan;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -308,6 +309,9 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
     }
 
     public void setUpSuggestion() {
+
+
+
         countersFromSharedPreferences = new int[]{sharedPreferences.getInt(COUNTER_1, 0),
                 sharedPreferences.getInt(COUNTER_2, 0),
                 sharedPreferences.getInt(COUNTER_3, 0),
@@ -321,8 +325,8 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
         //finding the life area with the fewest associated actions
         final int minValueIndex = getMin(countersFromSharedPreferences);
         Log.i(TAG, "minValueIndex is " + minValueIndex);
-        //hiding the suggestions display if there are no past actions to show
-        if (countersFromSharedPreferences[minValueIndex] == 0) {
+        //hiding the suggestions display if there are no past actions to show or if the device orientation is landscape
+        if (countersFromSharedPreferences[minValueIndex] == 0 || getResources().getConfiguration().orientation == 2) {
             Log.i(TAG, "if clause in setUpSuggestion(). Because countersFromSharedPreferences[minValueIndex] is 0, suggestions aren't being shown. Its value is " + countersFromSharedPreferences[minValueIndex] + " and the associated life area is " + lifeAreasFromSharedPreferences[minValueIndex]);
             suggestionLayout.setVisibility(GONE);
         } else {
