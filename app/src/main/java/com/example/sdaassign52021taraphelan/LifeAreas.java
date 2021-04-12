@@ -18,6 +18,12 @@ import java.util.Arrays;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static com.example.sdaassign52021taraphelan.Chart.COUNTER_1;
+import static com.example.sdaassign52021taraphelan.Chart.COUNTER_2;
+import static com.example.sdaassign52021taraphelan.Chart.COUNTER_3;
+import static com.example.sdaassign52021taraphelan.Chart.COUNTER_4;
+import static com.example.sdaassign52021taraphelan.Chart.COUNTER_5;
+import static com.example.sdaassign52021taraphelan.Chart.COUNTER_6;
 
 public class LifeAreas extends Fragment {
 
@@ -203,6 +209,14 @@ public class LifeAreas extends Fragment {
                     editor.putString(LIFE_AREA_4, lifeAreaValue4);
                     editor.putString(LIFE_AREA_5, lifeAreaValue5);
                     editor.putString(LIFE_AREA_6, lifeAreaValue6);
+
+                    editor.putInt(COUNTER_1, 0);
+                    editor.putInt(COUNTER_2, 0);
+                    editor.putInt(COUNTER_3, 0);
+                    editor.putInt(COUNTER_4, 0);
+                    editor.putInt(COUNTER_5, 0);
+                    editor.putInt(COUNTER_6, 0);
+
 
                     editor.apply();
                     Log.i(TAG, "LIFE_AREA_5: " + LIFE_AREA_5);

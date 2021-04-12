@@ -43,6 +43,12 @@ import java.util.Random;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static com.example.sdaassign52021taraphelan.Chart.COUNTER_1;
+import static com.example.sdaassign52021taraphelan.Chart.COUNTER_2;
+import static com.example.sdaassign52021taraphelan.Chart.COUNTER_3;
+import static com.example.sdaassign52021taraphelan.Chart.COUNTER_4;
+import static com.example.sdaassign52021taraphelan.Chart.COUNTER_5;
+import static com.example.sdaassign52021taraphelan.Chart.COUNTER_6;
 
 //TODO: Tidy this and add comments and styling
 
@@ -56,12 +62,12 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
     public static final String LIFE_AREA_4 = "life area 4";
     public static final String LIFE_AREA_5 = "life area 5";
     public static final String LIFE_AREA_6 = "life area 6";
-    public static final String COUNTER_1 = "counter 1";
+    /*public static final String COUNTER_1 = "counter 1";
     public static final String COUNTER_2 = "counter 2";
     public static final String COUNTER_3 = "counter 3";
     public static final String COUNTER_4 = "counter 4";
     public static final String COUNTER_5 = "counter 5";
-    public static final String COUNTER_6 = "counter 6";
+    public static final String COUNTER_6 = "counter 6";*/
     public int[] countersFromSharedPreferences;
 
     //setting up class-wide variables
@@ -439,7 +445,7 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
 
         selectedSpinnerPosition = i;
 
-        Toast.makeText(adapterView.getContext(), actionedLifeArea, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(adapterView.getContext(), actionedLifeArea, Toast.LENGTH_SHORT).show();
     }
 
     @Override

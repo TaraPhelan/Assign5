@@ -66,6 +66,8 @@ public class Chart extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_chart, container, false);
 
+        Log.i(TAG, "in onCreateView()");
+
         sharedPreferences = getContext().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -94,12 +96,7 @@ public class Chart extends Fragment {
                 sharedPreferences.getString(LIFE_AREA_5, defaultLifeAreas[4]),
                 sharedPreferences.getString(LIFE_AREA_6, defaultLifeAreas[5])};
 
-        countersFromSharedPreferences = new int[] {sharedPreferences.getInt(COUNTER_1, 1),
-                sharedPreferences.getInt(COUNTER_2, 0),
-                sharedPreferences.getInt(COUNTER_3, 0),
-                sharedPreferences.getInt(COUNTER_4, 0),
-                sharedPreferences.getInt(COUNTER_5, 0),
-                sharedPreferences.getInt(COUNTER_6, 0)};
+        getLocalCounters();
 
         for (i = 0; i < 5; i++) {
             Log.i(TAG, "i is " + String.valueOf(i));
@@ -201,6 +198,17 @@ public class Chart extends Fragment {
         return root;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Log.i(TAG, "in onResume. Counter for friends from array is" + countersFromSharedPreferences[3]);
+        Log.i(TAG, "Counter for friends from shareed preferences is " + sharedPreferences.getInt(COUNTER_4, 0));
+        getLocalCounters();
+        radarChart.notifyDataSetChanged();
+        radarChart.invalidate();
+    }
+
     //TODO: explore https://weeklycoding.com/mpandroidchart-documentation/general-settings-styling/ for refreshing in lifecycle methods
 
     private ArrayList<RadarEntry> dataValues() {
@@ -222,6 +230,15 @@ public class Chart extends Fragment {
         dataVals.add(new RadarEntry(countersFromSharedPreferences[4]));
         dataVals.add(new RadarEntry(countersFromSharedPreferences[5]));
         return dataVals;
+    }
+
+    public void getLocalCounters() {
+        countersFromSharedPreferences = new int[] {sharedPreferences.getInt(COUNTER_1, 1),
+                sharedPreferences.getInt(COUNTER_2, 0),
+                sharedPreferences.getInt(COUNTER_3, 0),
+                sharedPreferences.getInt(COUNTER_4, 0),
+                sharedPreferences.getInt(COUNTER_5, 0),
+                sharedPreferences.getInt(COUNTER_6, 0)};
     }
 
 }
