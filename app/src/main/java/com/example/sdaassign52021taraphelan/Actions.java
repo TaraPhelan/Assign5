@@ -260,6 +260,7 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), Inspiration.class);
+                intent.putExtra("Neglected Life Area", suggestionLine2.getText());
                 startActivity(intent);
             }
         });

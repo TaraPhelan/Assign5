@@ -21,6 +21,7 @@ import static android.view.View.GONE;
 public class Inspiration extends AppCompatActivity {
 
     private YouTubePlayerView youTubePlayerView;
+    private String videoId;
     private final String TAG = "Inspiration";
 
     @Override
@@ -41,6 +42,45 @@ public class Inspiration extends AppCompatActivity {
         //hides toolbar if activity is opened in landscape mode
         if (getResources().getConfiguration().orientation == 2) {
             getSupportActionBar().hide();
+        }
+
+        String[] defaultLifeAreas = new String[]{getString(R.string.default_life_area_1),
+                getString(R.string.default_life_area_2),
+                getString(R.string.default_life_area_3),
+                getString(R.string.default_life_area_4),
+                getString(R.string.default_life_area_5),
+                getString(R.string.default_life_area_6)
+        };
+
+        Bundle extras = getIntent().getExtras();
+
+        //TODO: handle extra being null
+
+        String neglectedLifeArea = extras.getString("Neglected Life Area");
+
+        switch (neglectedLifeArea) {
+            case "health":
+                videoId = getString(R.string.video_health);
+                break;
+            case "family":
+                videoId = getString(R.string.video_family);
+                break;
+            case "work":
+                videoId = getString(R.string.video_friends);
+                break;
+            case "friends":
+                videoId = getString(R.string.video_friends);
+                break;
+            case "learning":
+                Log.i(TAG, "learning is the case");
+                videoId = getString(R.string.video_learning);
+                break;
+            case "finances":
+                videoId = getString(R.string.video_finances);
+                break;
+            default:
+                Log.i(TAG, "default is the case");
+                videoId = getString(R.string.video_default);
         }
 
         //YouTube video player tutorial found at https://www.youtube.com/watch?v=yyduqrCpKGg
@@ -66,7 +106,6 @@ public class Inspiration extends AppCompatActivity {
             @Override
             public void onReady(YouTubePlayer youTubePlayer) {
                 super.onReady(youTubePlayer);
-                String videoId = "8KkKuTCFvzI";
                 youTubePlayer.cueVideo(videoId, 0);
             }
         });

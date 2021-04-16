@@ -20,6 +20,13 @@
     <string name="success_message">Your action has been saved!</string>
     <string name="suggestion_line_1">One area that needs attention is</string>
     <string name="suggestion_line_2">A past action you\'ve taken is</string>
+    <string name="video_default">8KkKuTCFvzI</string>
+    <string name="video_family"></string>
+    <string name="video_finances"></string>
+    <string name="video_friends"></string>
+    <string name="video_health"></string>
+    <string name="video_learning">5MgBikgcWnY</string>
+    <string name="video_work"></string>
     <string name="view_chart">View Chart</string>
     <string name="your_life_areas">Your Life Areas</string>
 </resources>
