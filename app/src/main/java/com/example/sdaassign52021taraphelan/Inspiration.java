@@ -54,9 +54,9 @@ public class Inspiration extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
 
-        //TODO: handle extra being null
-
         String neglectedLifeArea = extras.getString("Neglected Life Area");
+
+        Log.i(TAG, "neglected life area is " + neglectedLifeArea);
 
         switch (neglectedLifeArea) {
             case "health":

@@ -188,6 +188,7 @@ public class Chart extends Fragment {
         //dataSet.setFillAlpha(250);
         //dataSet.setFillColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null));
         dataSet.setFillColor(Color.RED);
+        //TODO: get rid of suvagrey if not used
         //dataSet.setColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null));
         //radarChart.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.suvaGrey, null));
         //radarChart.setWebAlpha(0);
