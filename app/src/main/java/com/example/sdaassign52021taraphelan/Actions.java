@@ -175,26 +175,35 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
                                                     Log.i(TAG, "selectedSpinnerPosition is " + selectedSpinnerPosition);
                                                     Log.i(TAG, "newCollectionSizeInt is " + newCollectionSizeInt);
 
-
+                                                    //increasing the associated local counter variable
                                                     SharedPreferences.Editor editor = sharedPreferences.edit();
+                                                    int newLocalCounterValue;
                                                     switch (selectedSpinnerPosition) {
                                                         case 0:
-                                                            editor.putInt(COUNTER_1, newCollectionSizeInt);
+                                                            Log.i(TAG, "current local counter value for health is " + sharedPreferences.getInt(COUNTER_1, 0));
+                                                            newLocalCounterValue = (sharedPreferences.getInt(COUNTER_1, 0)) + 1;
+                                                            Log.i(TAG, "updated local counter variable value is " + newLocalCounterValue);
+                                                            editor.putInt(COUNTER_1, newLocalCounterValue);
                                                             break;
                                                         case 1:
-                                                            editor.putInt(COUNTER_2, newCollectionSizeInt);
+                                                            newLocalCounterValue = (sharedPreferences.getInt(COUNTER_2, 0)) + 1;
+                                                            editor.putInt(COUNTER_2, newLocalCounterValue);
                                                             break;
                                                         case 2:
-                                                            editor.putInt(COUNTER_3, newCollectionSizeInt);
+                                                            newLocalCounterValue = (sharedPreferences.getInt(COUNTER_3, 0)) + 1;
+                                                            editor.putInt(COUNTER_3, newLocalCounterValue);
                                                             break;
                                                         case 3:
-                                                            editor.putInt(COUNTER_4, newCollectionSizeInt);
+                                                            newLocalCounterValue = (sharedPreferences.getInt(COUNTER_4, 0)) + 1;
+                                                            editor.putInt(COUNTER_4, newLocalCounterValue);
                                                             break;
                                                         case 4:
-                                                            editor.putInt(COUNTER_5, newCollectionSizeInt);
+                                                            newLocalCounterValue = (sharedPreferences.getInt(COUNTER_5, 0)) + 1;
+                                                            editor.putInt(COUNTER_5, newLocalCounterValue);
                                                             break;
                                                         case 5:
-                                                            editor.putInt(COUNTER_6, newCollectionSizeInt);
+                                                            newLocalCounterValue = (sharedPreferences.getInt(COUNTER_6, 0)) + 1;
+                                                            editor.putInt(COUNTER_6, newLocalCounterValue);
                                                             break;
                                                     }
 

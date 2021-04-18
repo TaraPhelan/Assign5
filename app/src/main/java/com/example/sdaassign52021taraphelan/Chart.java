@@ -98,7 +98,7 @@ public class Chart extends Fragment {
 
         getLocalCounters();
 
-        for (i = 0; i < 5; i++) {
+        /*for (i = 0; i < 5; i++) {
             Log.i(TAG, "i is " + String.valueOf(i));
             //adding data to Cloud Firestore
             final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -117,15 +117,8 @@ public class Chart extends Fragment {
                                         collectionSize[i] = Integer.parseInt(String.valueOf(doc.get("numberOfDocuments")));
                                         collectionSize[i] = 4;
                                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                                        //editor.putInt(INT, 3);
-
-                    /*editor.putString(lifeAreaValue2, LIFE_AREA_2);
-                    editor.putString(lifeAreaValue3, LIFE_AREA_3);
-                    editor.putString(lifeAreaValue4, LIFE_AREA_4);
-                    editor.putString(lifeAreaValue5, LIFE_AREA_5);
-                    editor.putString(lifeAreaValue6, LIFE_AREA_6);*/
-
-                                        editor.apply();
+                                        */
+                                      /*  editor.apply();
                                     } else {
                                         collectionSize[i] = 0;
                                     }
@@ -147,7 +140,7 @@ public class Chart extends Fragment {
                                 Log.e(TAG, "On Failure: ", e);
                             }
                         });
-            }
+            }*/
 
         //radar chart tutorial found at https://www.youtube.com/watch?v=Ii4FbRDvmqI
         radarChart = root.findViewById(R.id.radarChart);
