@@ -1,18 +1,13 @@
 package com.example.sdaassign52021taraphelan;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
-import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import com.github.mikephil.charting.charts.RadarChart;
@@ -21,27 +16,26 @@ import com.github.mikephil.charting.data.RadarData;
 import com.github.mikephil.charting.data.RadarDataSet;
 import com.github.mikephil.charting.data.RadarEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
+/**
+ * Chart class
+ *
+ * @author Tara Phelan 2021
+ * @version 1.0
+ */
 public class Chart extends Fragment {
 
-    //setting up class-wide variables
-    public int collectionSize [] = new int[6];
+    // Sets up class-wide variables
     public final String TAG = "Chart";
     public String[] lifeAreasFromSharedPreferences;
     public int[] countersFromSharedPreferences;
     public SharedPreferences sharedPreferences;
     public String[] defaultLifeAreas;
-    public int i;
     public RadarChart radarChart;
 
-    //setting up constants to be used by SharedPreferences
+    // Sets up constants to be used by SharedPreferences
     public static final String SHARED_PREFS = "shared prefs";
     public static final String LIFE_AREA_1 = "life area 1";
     public static final String LIFE_AREA_2 = "life area 2";
@@ -60,97 +54,47 @@ public class Chart extends Fragment {
         // Required empty public constructor
     }
 
+    /**
+     * Sets the content to the fragment_chart XML layout and inflates the UI
+     *
+     * @param inflater           inflates the layout for this fragment
+     * @param container          the ViewGroup
+     * @param savedInstanceState to hold state information
+     * @return returns the View
+     * @author Tara Phelan 2021
+     * @version 1.0
+     * @see androidx.fragment.app.Fragment {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
+        // Inflates the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_chart, container, false);
 
-        Log.i(TAG, "in onCreateView()");
-
+        // Sets up the life areas from SharedPreferences or defaults
         sharedPreferences = getContext().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
-
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        //editor.putInt(COUNTER_1, 2);
-
-                    /*editor.putString(lifeAreaValue2, LIFE_AREA_2);
-                    editor.putString(lifeAreaValue3, LIFE_AREA_3);
-                    editor.putString(lifeAreaValue4, LIFE_AREA_4);
-                    editor.putString(lifeAreaValue5, LIFE_AREA_5);
-                    editor.putString(lifeAreaValue6, LIFE_AREA_6);*/
-
-        editor.apply();
-
-        defaultLifeAreas = new String[] {getString(R.string.default_life_area_1),
+        defaultLifeAreas = new String[]{getString(R.string.default_life_area_1),
                 getString(R.string.default_life_area_2),
                 getString(R.string.default_life_area_3),
                 getString(R.string.default_life_area_4),
                 getString(R.string.default_life_area_5),
                 getString(R.string.default_life_area_6)
         };
-
-        lifeAreasFromSharedPreferences = new String[] {sharedPreferences.getString(LIFE_AREA_1, defaultLifeAreas[0]),
+        lifeAreasFromSharedPreferences = new String[]{sharedPreferences.getString(LIFE_AREA_1, defaultLifeAreas[0]),
                 sharedPreferences.getString(LIFE_AREA_2, defaultLifeAreas[1]),
                 sharedPreferences.getString(LIFE_AREA_3, defaultLifeAreas[2]),
                 sharedPreferences.getString(LIFE_AREA_4, defaultLifeAreas[3]),
                 sharedPreferences.getString(LIFE_AREA_5, defaultLifeAreas[4]),
                 sharedPreferences.getString(LIFE_AREA_6, defaultLifeAreas[5])};
 
+        // Gets the local counters for the radar chart
         getLocalCounters();
 
-        /*for (i = 0; i < 5; i++) {
-            Log.i(TAG, "i is " + String.valueOf(i));
-            //adding data to Cloud Firestore
-            final FirebaseFirestore db = FirebaseFirestore.getInstance();
-            //getting the current collection size
-
-           db.collection(lifeAreasFromSharedPreferences[i])
-                        .document("collectionSize")
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                                if (task.isSuccessful()) {
-                                    DocumentSnapshot doc = task.getResult();
-                                    if (!(doc.get("numberOfDocuments") == null)) {
-                                        collectionSize[i] = Integer.parseInt(String.valueOf(doc.get("numberOfDocuments")));
-                                        collectionSize[i] = 4;
-                                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                                        */
-                                      /*  editor.apply();
-                                    } else {
-                                        collectionSize[i] = 0;
-                                    }
-                                    Log.i(TAG, String.valueOf(collectionSize[i]));
-                                    if (i == 4) {
-                                        try {
-                                            doc.wait();
-                                        } catch (InterruptedException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }
-
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.e(TAG, "On Failure: ", e);
-                            }
-                        });
-            }*/
-
-        //radar chart tutorial found at https://www.youtube.com/watch?v=Ii4FbRDvmqI
+        // Radar chart tutorial found at https://www.youtube.com/watch?v=Ii4FbRDvmqI
         radarChart = root.findViewById(R.id.radarChart);
-
-        Log.i(TAG, "just before data values");
         RadarDataSet dataSet = new RadarDataSet(dataValues(), "Life Areas");
         dataSet.setColor(Color.RED);
-        /*dataSet.setDrawHighlightCircleEnabled(true);
-        dataSet.setHighlightCircleFillColor(Color.BLUE);*/
-
         RadarData data = new RadarData();
         data.addDataSet(dataSet);
         String[] labels = {lifeAreasFromSharedPreferences[0],
@@ -160,63 +104,41 @@ public class Chart extends Fragment {
                 lifeAreasFromSharedPreferences[4],
                 lifeAreasFromSharedPreferences[5]
         };
-
-        //String[] labels = {"health", "finances", "work", "family", "friends", "learning"};
         XAxis xAxis = radarChart.getXAxis();
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
-        //xAxis.setDrawLabels(false);
-        //xAxis.setDrawGridLines(false);
         xAxis.setTextSize(14);
         radarChart.setData(data);
         radarChart.getLegend().setEnabled(false);
         radarChart.getDescription().setEnabled(false);
-
-
-        //radarChart.setWebColorInner(Color.argb(1, 0, 0, 0));
-        //radarChart.setWebAlpha(100);
-        //radarChart.setWebAlpha(100%);
-        //radarChart.setWebColorInner(Color.BLUE);
         dataSet.setDrawFilled(true);
         dataSet.setDrawValues(false);
-        //dataSet.setFillAlpha(250);
-        //dataSet.setFillColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null));
         dataSet.setFillColor(Color.RED);
-        //TODO: get rid of suvagrey if not used
-        //dataSet.setColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null));
-        //radarChart.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.suvaGrey, null));
-        //radarChart.setWebAlpha(0);
-        //radarChart.setSkipWebLineCount(5);
-        //radarChart.setWebColorInner(Color.rgb(0, 255, 0));
-        //TODO: look at https://weeklycoding.com/mpandroidchart-documentation/
 
+        // Returns the View
         return root;
     }
 
+    /**
+     * Calls super.onResume() and getLocalCounters methods
+     *
+     * @see androidx.fragment.app.Fragment {@link #onResume()}
+     */
     @Override
     public void onResume() {
         super.onResume();
-
-        Log.i(TAG, "in onResume. Counter for friends from array is" + countersFromSharedPreferences[3]);
-        Log.i(TAG, "Counter for friends from shareed preferences is " + sharedPreferences.getInt(COUNTER_4, 0));
         getLocalCounters();
+
+        // Updates the radar chart
         radarChart.notifyDataSetChanged();
-        radarChart.invalidate();
     }
 
-    //TODO: explore https://weeklycoding.com/mpandroidchart-documentation/general-settings-styling/ for refreshing in lifecycle methods
-
+    /**
+     * Sets up data values for the radar chart
+     *
+     * @return data values
+     */
     private ArrayList<RadarEntry> dataValues() {
-        Log.i(TAG, "in datavalues");
-
         ArrayList<RadarEntry> dataVals = new ArrayList<RadarEntry>();
-
-        Log.i(TAG, "counter from sharedprefereences is " + sharedPreferences.getInt(COUNTER_1, 29));
-        Log.i(TAG, "countersFromSharedPreferences[0] is " + countersFromSharedPreferences[0]);
-        Log.i(TAG, "countersFromSharedPreferences[1] is " + countersFromSharedPreferences[1]);
-        Log.i(TAG, "countersFromSharedPreferences[2] is " + countersFromSharedPreferences[2]);
-        Log.i(TAG, "countersFromSharedPreferences[3] is " + countersFromSharedPreferences[3]);
-        Log.i(TAG, "countersFromSharedPreferences[4] is " + countersFromSharedPreferences[4]);
-        Log.i(TAG, "countersFromSharedPreferences[5] is " + countersFromSharedPreferences[5]);
         dataVals.add(new RadarEntry(countersFromSharedPreferences[0]));
         dataVals.add(new RadarEntry(countersFromSharedPreferences[1]));
         dataVals.add(new RadarEntry(countersFromSharedPreferences[2]));
@@ -226,8 +148,11 @@ public class Chart extends Fragment {
         return dataVals;
     }
 
+    /**
+     * Gets local counters from SharedPreferences and adds them to an int Array
+     */
     public void getLocalCounters() {
-        countersFromSharedPreferences = new int[] {sharedPreferences.getInt(COUNTER_1, 1),
+        countersFromSharedPreferences = new int[]{sharedPreferences.getInt(COUNTER_1, 1),
                 sharedPreferences.getInt(COUNTER_2, 0),
                 sharedPreferences.getInt(COUNTER_3, 0),
                 sharedPreferences.getInt(COUNTER_4, 0),

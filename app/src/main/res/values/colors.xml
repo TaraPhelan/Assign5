@@ -3,6 +3,5 @@
     <color name="colorPrimary">#52B1AF</color>
     <color name="colorPrimaryDark">#306D6C</color>
     <color name="colorAccent">#FFCF70</color>
-    <color name="suvaGrey">#8F8F8F</color>
     <color name="activeTab">#FFFFFF</color>
 </resources>

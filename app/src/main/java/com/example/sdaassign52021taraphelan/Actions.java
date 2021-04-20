@@ -1,13 +1,9 @@
 package com.example.sdaassign52021taraphelan;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Layout;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,7 +30,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,11 +44,16 @@ import static com.example.sdaassign52021taraphelan.Chart.COUNTER_4;
 import static com.example.sdaassign52021taraphelan.Chart.COUNTER_5;
 import static com.example.sdaassign52021taraphelan.Chart.COUNTER_6;
 
-//TODO: Tidy this and add comments and styling
 
+/**
+ * Actions class
+ *
+ * @author Tara Phelan 2021
+ * @version 1.0
+ */
 public class Actions extends Fragment implements AdapterView.OnItemSelectedListener {
 
-    //setting up constants to be used by SharedPreferences
+    // Sets up constants to be used by SharedPreferences
     public static final String SHARED_PREFS = "shared prefs";
     public static final String LIFE_AREA_1 = "life area 1";
     public static final String LIFE_AREA_2 = "life area 2";
@@ -62,55 +61,63 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
     public static final String LIFE_AREA_4 = "life area 4";
     public static final String LIFE_AREA_5 = "life area 5";
     public static final String LIFE_AREA_6 = "life area 6";
-    /*public static final String COUNTER_1 = "counter 1";
-    public static final String COUNTER_2 = "counter 2";
-    public static final String COUNTER_3 = "counter 3";
-    public static final String COUNTER_4 = "counter 4";
-    public static final String COUNTER_5 = "counter 5";
-    public static final String COUNTER_6 = "counter 6";*/
-    public int[] countersFromSharedPreferences;
 
-    //setting up class-wide variables
-    public Spinner spinner;
-    public SharedPreferences sharedPreferences;
-    public String[] defaultLifeAreas;
+    // Sets up class-wide variables
     public ArrayList<String> arrayList;
-    public String[] lifeAreasFromSharedPreferences;
-    public static final String TAG = "Actions";
-    public String actionedLifeArea;
-    private String documentId;
-    private String pastAction;
-    public int selectedSpinnerPosition;
+    public int[] countersFromSharedPreferences;
     public int newCollectionSizeInt;
+    public int selectedSpinnerPosition;
+    public LinearLayout suggestionLayout;
+    public SharedPreferences sharedPreferences;
+    public Spinner spinner;
+    public String[] defaultLifeAreas;
+    public String[] lifeAreasFromSharedPreferences;
+    public String actionedLifeArea;
+    private String pastAction;
+    public static final String TAG = "Actions";
     public TextView suggestionLine2;
     public TextView suggestionLine4;
-    public LinearLayout suggestionLayout;
 
     public Actions() {
         // Required empty public constructor
     }
 
+    /**
+     * Sets the content to the fragment_actions XML layout and inflates the UI
+     *
+     * @param inflater           inflates the layout for this fragment
+     * @param container          the ViewGroup
+     * @param savedInstanceState to hold state information
+     * @return returns the View
+     * @author Tara Phelan 2021
+     * @version 1.0
+     * @see androidx.fragment.app.Fragment {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //innflating the layout for this fragment
+
+        // Inflates the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_actions, container, false);
 
+        // Sets up Views to be found by Java
         final EditText actionSummary = root.findViewById(R.id.actionSummary);
         spinner = root.findViewById(R.id.spinner);
-        // TODO: change ids in all layouts
-        Button save = root.findViewById(R.id.saveAction);
-        Button inspireMe = root.findViewById(R.id.inspireMe);
+        Button saveButton = root.findViewById(R.id.saveAction);
+        Button inspireMeButton = root.findViewById(R.id.inspireMe);
         Button suggestionButton = root.findViewById(R.id.suggestionButton);
         suggestionLayout = root.findViewById(R.id.suggestionLayout);
         suggestionLine2 = root.findViewById(R.id.suggestionLine2);
         suggestionLine4 = root.findViewById(R.id.suggestionLine4);
 
+        // Calls method to set up spinner values
         setUpSpinner();
 
+        // Calls method to display a suggestion
         Log.i(TAG, "setUpSuggestion() being called from onCreateView()");
         setUpSuggestion();
 
+        // Hides suggestion if x button is pressed
         suggestionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,71 +125,63 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
             }
         });
 
-        save.setOnClickListener(new View.OnClickListener() {
+        // Saves action to Cloud Firestore and updates remote and local counters
+        saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                //adding data to Cloud Firestore
+                // Gets the current collection size
                 final FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-                //getting the current collection size
                 db.collection(actionedLifeArea)
                         .document("collectionSize")
                         .get()
                         .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
                                 if (task.isSuccessful()) {
                                     DocumentSnapshot doc = task.getResult();
+
+                                    // Increases the numberOfDocuments value by 1 if collection already exists
                                     if (!(doc.get("numberOfDocuments") == null)) {
-                                        Log.i(TAG, "if clause and numberOfDocuments is " + (String.valueOf(doc.get("numberOfDocuments"))));
+                                        Log.i(TAG, "numberOfDocuments is " + doc.get("numberOfDocuments"));
                                         long newCollectionSize = (Long.parseLong(String.valueOf(doc.get("numberOfDocuments")))) + 1;
                                         newCollectionSizeInt = (int) newCollectionSize;
-
-                                        //((long) doc.get("numberOfDocuments")) + 1;
-
-
                                         FirebaseFirestore.getInstance().collection(actionedLifeArea)
                                                 .document("collectionSize").update("numberOfDocuments", newCollectionSize);
-                                        //Log.d ("Document", String.valueOf(doc.getData()));
-                                    } else {
-                                        Log.i(TAG, "else clause. " + doc.get("numberOfDocuments"));
 
+                                        // Creates a collectionSize document with numberOfDocuments set to 1 if collection does not already exist
+                                    } else {
+                                        Log.i(TAG, "A new collection will be created");
                                         newCollectionSizeInt = 1;
                                         Map<String, Object> collectionSizeData = new HashMap<>();
                                         collectionSizeData.put(getString(R.string.number_of_documents), newCollectionSizeInt);
-
                                         db.collection(actionedLifeArea).document("collectionSize")
                                                 .set(collectionSizeData);
-
-
                                     }
 
-                                    // Add a new document with a generated id.
+                                    // Adds a new document to hold the saved action
                                     final Map<String, Object> data = new HashMap<>();
                                     data.put(getString(R.string.action), actionSummary.getText().toString());
-                                    Log.i(TAG, "just before putting the data, newCollectionSizeInt is " + newCollectionSizeInt);
-                                    data.put("incrementalId", newCollectionSizeInt);
+                                    Log.i(TAG, "When this action is added, the newCollectionSizeInt is " + newCollectionSizeInt);
 
+                                    // Creates an incrementalId for the new action
+                                    data.put("incrementalId", newCollectionSizeInt);
                                     db.collection(actionedLifeArea)
                                             .add(data)
                                             .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                                 @Override
                                                 public void onSuccess(DocumentReference documentReference) {
-                                                    Log.i(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                                                    Log.i(TAG, "DocumentSnapshot was written with ID " + documentReference.getId());
                                                     Log.i(TAG, "selectedSpinnerPosition is " + selectedSpinnerPosition);
-                                                    Log.i(TAG, "selectedSpinnerPosition is " + selectedSpinnerPosition);
-                                                    Log.i(TAG, "newCollectionSizeInt is " + newCollectionSizeInt);
+                                                    Log.i(TAG, "actionedLifeArea is " + actionedLifeArea);
 
-                                                    //increasing the associated local counter variable
+                                                    // Increases the corresponding local counter by 1
                                                     SharedPreferences.Editor editor = sharedPreferences.edit();
                                                     int newLocalCounterValue;
                                                     switch (selectedSpinnerPosition) {
                                                         case 0:
-                                                            Log.i(TAG, "current local counter value for health is " + sharedPreferences.getInt(COUNTER_1, 0));
+                                                            Log.i(TAG, "current local counter value for the first spinner position is " + sharedPreferences.getInt(COUNTER_1, 0));
                                                             newLocalCounterValue = (sharedPreferences.getInt(COUNTER_1, 0)) + 1;
-                                                            Log.i(TAG, "updated local counter variable value is " + newLocalCounterValue);
                                                             editor.putInt(COUNTER_1, newLocalCounterValue);
                                                             break;
                                                         case 1:
@@ -206,42 +205,19 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
                                                             editor.putInt(COUNTER_6, newLocalCounterValue);
                                                             break;
                                                     }
-
-                    /*editor.putString(lifeAreaValue2, LIFE_AREA_2);
-                    editor.putString(lifeAreaValue3, LIFE_AREA_3);
-                    editor.putString(lifeAreaValue4, LIFE_AREA_4);
-                    editor.putString(lifeAreaValue5, LIFE_AREA_5);
-                    editor.putString(lifeAreaValue6, LIFE_AREA_6);*/
-
-                                /*editor.putString(LIFE_AREA_2, lifeAreaValue2);
-                                editor.putString(LIFE_AREA_3, lifeAreaValue3);
-                                editor.putString(LIFE_AREA_4, lifeAreaValue4);
-                                editor.putString(LIFE_AREA_5, lifeAreaValue5);
-                                editor.putString(LIFE_AREA_6, lifeAreaValue6);*/
-
                                                     editor.apply();
-                                                    Log.i("Chart", "editor.apply(called");
-                                                    Log.i(TAG, "the first counter from sharedpreferences is " + sharedPreferences.getInt(COUNTER_1, 22));
 
-                                                    Log.i(TAG, "the first counter from sharedpreferences phrased differently is " + String.valueOf(sharedPreferences.getInt(COUNTER_1, 16)));
-
-                                                    //TODO: update the shared preferences counter here using selectedSpinnerPosition (which follows index numbers)
-                                /*SharedPreferences.Editor editor = sharedPreferences.edit();
-                                countersFromSharedPreferences[selectedSpinnerPosition];
-
-                                editor.putString(LIFE_AREA_2, lifeAreaValue2);
-                                editor.putString(LIFE_AREA_3, lifeAreaValue3);
-                                editor.putString(LIFE_AREA_4, lifeAreaValue4);
-                                editor.putString(LIFE_AREA_5, lifeAreaValue5);
-                                editor.putString(LIFE_AREA_6, lifeAreaValue6);
-
-                                editor.apply(); */
-
-                                                    //clearing the EditText and clearing its focus before showing the success message
+                                                    // Clears the EditText
                                                     actionSummary.getText().clear();
+
+                                                    // Removes focus from the EditText
                                                     actionSummary.clearFocus();
+
+                                                    // Shows the success message
                                                     Toast.makeText(getContext(), getString(R.string.success_message), Toast.LENGTH_SHORT).show();
-                                                    Log.i(TAG, "setUpSuggestion() being called from onClick() after toast message");
+
+                                                    // Updates the suggestion
+                                                    Log.i(TAG, "setUpSuggestion() being called from onClick() method after toast message");
                                                     setUpSuggestion();
                                                 }
                                             })
@@ -251,9 +227,7 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
                                                     Log.i(TAG, "Error adding document", e);
                                                 }
                                             });
-
                                 }
-
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -265,28 +239,39 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
             }
         });
 
-        inspireMe.setOnClickListener(new View.OnClickListener() {
+        // Sets up OnClickListener to open Inspiration Activity
+        inspireMeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                // Sets up Intent and passes the current neglected life area as an extra
                 Intent intent = new Intent(getContext(), Inspiration.class);
                 intent.putExtra("Neglected Life Area", suggestionLine2.getText());
                 startActivity(intent);
             }
         });
 
+        // Returns the view
         return root;
     }
 
+    /**
+     * Calls super.onResume() and setUpSpinner methods
+     *
+     * @see androidx.fragment.app.Fragment {@link #onResume()}
+     */
     @Override
     public void onResume() {
-
         super.onResume();
         setUpSpinner();
     }
 
+    /**
+     * Sets up the Spinner
+     */
     public void setUpSpinner() {
 
-        //setting up default life areas in case SharedPreferences have not been saved
+        // Adds default life areas to a String Array in case SharedPreferences have not been saved
         defaultLifeAreas = new String[]{getString(R.string.default_life_area_1),
                 getString(R.string.default_life_area_2),
                 getString(R.string.default_life_area_3),
@@ -295,8 +280,8 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
                 getString(R.string.default_life_area_6)
         };
 
+        // Creates an Array to hold life areas from SharedPreferences or defaults
         sharedPreferences = getContext().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
-
         lifeAreasFromSharedPreferences = new String[]{sharedPreferences.getString(LIFE_AREA_1, defaultLifeAreas[0]),
                 sharedPreferences.getString(LIFE_AREA_2, defaultLifeAreas[1]),
                 sharedPreferences.getString(LIFE_AREA_3, defaultLifeAreas[2]),
@@ -304,30 +289,23 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
                 sharedPreferences.getString(LIFE_AREA_5, defaultLifeAreas[4]),
                 sharedPreferences.getString(LIFE_AREA_6, defaultLifeAreas[5])};
 
-        //spinner tutorial found at https://www.tutorialspoint.com/how-can-i-add-items-to-a-spinner-in-android
+        // Spinner tutorial found at https://www.tutorialspoint.com/how-can-i-add-items-to-a-spinner-in-android
         arrayList = new ArrayList<>();
-
         for (int i = 0; i < lifeAreasFromSharedPreferences.length; i++) {
             arrayList.add(lifeAreasFromSharedPreferences[i]);
         }
-
-        /*arrayList.add(sharedPreferences.getString(LIFE_AREA_1,defaultLifeAreas[0]));
-        arrayList.add(sharedPreferences.getString(LIFE_AREA_2,defaultLifeAreas[1]));
-        arrayList.add(sharedPreferences.getString(LIFE_AREA_3,defaultLifeAreas[2]));
-        arrayList.add(sharedPreferences.getString(LIFE_AREA_4,defaultLifeAreas[3]));
-        arrayList.add(sharedPreferences.getString(LIFE_AREA_5,defaultLifeAreas[4]));
-        arrayList.add(sharedPreferences.getString(LIFE_AREA_6,defaultLifeAreas[5]));*/
-
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview, arrayList);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(arrayAdapter);
         spinner.setOnItemSelectedListener(this);
     }
 
+    /**
+     * Sets up the suggestion display
+     */
     public void setUpSuggestion() {
 
-
-
+        // Gets local counters from SharedPreferences
         countersFromSharedPreferences = new int[]{sharedPreferences.getInt(COUNTER_1, 0),
                 sharedPreferences.getInt(COUNTER_2, 0),
                 sharedPreferences.getInt(COUNTER_3, 0),
@@ -336,31 +314,35 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
                 sharedPreferences.getInt(COUNTER_6, 0)
         };
 
-        Log.i(TAG, "in setUpSuggestion()");
-
-        //finding the life area with the fewest associated actions
+        // Finds the life area with the fewest associated actions
         final int minValueIndex = getMin(countersFromSharedPreferences);
         Log.i(TAG, "minValueIndex is " + minValueIndex);
-        //hiding the suggestions display if there are no past actions to show or if the device orientation is landscape
+
+        // Hides the suggestions display if the user has a life area with no associated actions or if the device orientation is landscape
         if (countersFromSharedPreferences[minValueIndex] == 0 || getResources().getConfiguration().orientation == 2) {
-            Log.i(TAG, "if clause in setUpSuggestion(). Because countersFromSharedPreferences[minValueIndex] is 0, suggestions aren't being shown. Its value is " + countersFromSharedPreferences[minValueIndex] + " and the associated life area is " + lifeAreasFromSharedPreferences[minValueIndex]);
+            Log.i(TAG, "Suggestions aren't shown. Either the orientation is landscape or the local counter for " + lifeAreasFromSharedPreferences[minValueIndex] + " is 0");
             suggestionLayout.setVisibility(GONE);
+
+            // Shows the suggestion display
         } else {
-            Log.i(TAG, "else clause in setUpSuggestion(), indicating the value of this counter is not zero. It is " + countersFromSharedPreferences[minValueIndex]);
-            //suggestionLayout.setVisibility(VISIBLE);
-            Log.i(TAG, "Else clause. Suggestion should be visible with the life area " + lifeAreasFromSharedPreferences[minValueIndex]);
+
+            // Displays the most neglected life area
+            Log.i(TAG, "The value of the local counter for " + lifeAreasFromSharedPreferences[minValueIndex] + " is " + countersFromSharedPreferences[minValueIndex]);
             suggestionLine2.setText(lifeAreasFromSharedPreferences[minValueIndex]);
 
-            //getting a random number to choose a past action
+            // Gets a random number to choose a past action
             Random random = new Random();
-            //1 is added to the counter because the radonm number will be between 0 (inclusive) and the argument (exclusive)
+
+            // Adds 1 to the counter because the random number will be between 0 (inclusive) and the argument (exclusive)
             int randomNumber = random.nextInt(countersFromSharedPreferences[minValueIndex] + 1);
+
+            // Chooses a new random number if 0 was chosen
             while (randomNumber == 0) {
                 randomNumber = random.nextInt(countersFromSharedPreferences[minValueIndex] + 1);
             }
             Log.i(TAG, "randomNumber is " + randomNumber + " and the counter for " + lifeAreasFromSharedPreferences[minValueIndex] + " is " + countersFromSharedPreferences[minValueIndex]);
 
-            //retrieving data from Cloud Firestore. Amended from https://www.youtube.com/watch?v=DP1Bc8XmYWs
+            // Retrieves the action from Cloud Firestore which corresponds to the random number. Amended from https://www.youtube.com/watch?v=DP1Bc8XmYWs
             FirebaseFirestore.getInstance()
                     .collection(lifeAreasFromSharedPreferences[minValueIndex])
                     .whereEqualTo("incrementalId", randomNumber)
@@ -368,21 +350,23 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            Log.i(TAG, "in onSuccess");
-                            Log.i(TAG, "OnSuccess in setUpSuggestion()");
                             List<DocumentSnapshot> snapshotList = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot snapshot : snapshotList) {
-                                documentId = snapshot.getId();
                                 pastAction = (String) snapshot.get("action");
-                                Log.i(TAG, "minValueIndex is " + minValueIndex + " and life area is" + lifeAreasFromSharedPreferences[minValueIndex] + " and past action is " + pastAction);
+                                Log.i(TAG, "life area is" + lifeAreasFromSharedPreferences[minValueIndex] + " and past action is " + pastAction);
                             }
+
+                            // Hides the suggestion if the past action is null
                             if (pastAction == null) {
-                                Log.i(TAG, "past action == null. It is " + pastAction);
+                                Log.i(TAG, "past action == null");
                                 suggestionLayout.setVisibility(GONE);
+
+                                // Shows the suggestion if the past action is not null
                             } else {
                                 Log.i(TAG, "past action is not null. It is " + pastAction);
                                 suggestionLine4.setText(pastAction);
-                                //resetting pastAction to allow it to be reused
+
+                                // Resets the pastAction variable to allow it to be reused
                                 pastAction = null;
                                 suggestionLayout.setVisibility(VISIBLE);
                             }
@@ -391,71 +375,24 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Log.i(TAG, "OnFailure in setUpSuggestion()");
                             Log.e(TAG, "On Failure: ", e);
                         }
                     });
-
-                                /*
-                                //checking if the current borrower is associated with this book already
-                                String databaseBorrowerId;
-                                databaseBorrowerId = snapshot.getString("currentBorrowerId");
-                                try {
-                                    if (databaseBorrowerId.equals(borrowerIdFromSharedPrefs)) {
-                                        Date loanStartDate = snapshot.getTimestamp("collectionDate").toDate();
-                                        String loanStartDateFormatted = DateFormat.format("dd/MM/yyyy", loanStartDate).toString();
-                                        Date loanEndDate = snapshot.getTimestamp("nextAvailableDate").toDate();
-                                        String loanEndDateFormatted = DateFormat.format("dd/MM/yyyy", loanEndDate).toString();
-                                        displayBook.setText(String.format(getString(R.string.already_loaned), usernameFromSharedPrefs, chosenBook, loanStartDateFormatted, loanEndDateFormatted));
-                                        displayBookAvailability.setVisibility(GONE);
-                                        selectDate.setText(R.string.borrow_again);
-                                    }
-                                } catch (Exception e) {
-                                    Log.d(TAG, "currentBorrowerId field does not exist in the database", e);
-                                }
-
-                                //getting Date objects for the next available date and today's date
-                                nextAvailableDate = timestamp.toDate();
-                                today = todayCalendar.getTime();
-                                String formattedNextAvailableDate = DateFormat.format("dd/MM/yyyy", nextAvailableDate).toString();
-
-                                //checking if the book is currently available
-                                long difference = getDifferenceBetweenDates(today, nextAvailableDate);
-
-                                //handling book that is currently available
-                                if (difference <= 1) {
-                                    Log.d(TAG, "Book is available message: " + bookIsAvailableMessage);
-                                    displayBookAvailability.setText(bookIsAvailableMessage);
-                                    selectDate.setVisibility(View.VISIBLE);
-
-                                    //handling book that will be available within 2 weeks
-                                } else if (difference < 14) {
-                                    displayBookAvailability.setText(String.format(getString(R.string.book_is_unavailable), formattedNextAvailableDate));
-                                    selectDate.setVisibility(View.VISIBLE);
-
-                                    //handling book that won't be available within 2 weeks
-                                } else {
-                                    Date reservationDate = new Date(nextAvailableDate.getTime() - (14 * 24 * 3600 * 1000));
-                                    String formattedReservationDate = DateFormat.format("dd/MM/yyyy", reservationDate).toString();
-                                    String bookIsUnavailableToReserveMessage = String.format(getString(R.string.book_is_unavailable_and_cannot_be_reserved), formattedNextAvailableDate, formattedReservationDate);
-                                    displayBookAvailability.setText(bookIsUnavailableToReserveMessage);
-                                    selectDate.setVisibility(INVISIBLE);
-                                    sendOrder.setVisibility(INVISIBLE);
-                                }
-                            }
-                        }
-
-                                 */
         }
     }
 
+    /**
+     * Handles spinner item selection
+     *
+     * @param adapterView
+     * @param view
+     * @param i
+     * @param l
+     */
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         actionedLifeArea = adapterView.getItemAtPosition(i).toString();
-
         selectedSpinnerPosition = i;
-
-        //Toast.makeText(adapterView.getContext(), actionedLifeArea, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -464,11 +401,11 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
     }
 
     /**
-     * Method for getting the index at which the smallest int in an array is located.
+     * Gets the index at which the smallest int in an array is located
      * Adapted from https://beginnersbook.com/2014/07/java-finding-minimum-and-maximum-values-in-an-array/
      *
      * @param inputArray
-     * @return int - index at which the smallest int in the array is located
+     * @return int index at which the smallest int in the array is located
      */
     public static int getMin(int[] inputArray) {
         int minValue = inputArray[0];
@@ -481,5 +418,4 @@ public class Actions extends Fragment implements AdapterView.OnItemSelectedListe
         }
         return arrayIndex;
     }
-
 }

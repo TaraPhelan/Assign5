@@ -3,6 +3,7 @@
     <string name="action_hint">What action did you take?</string>
     <string name="app_name">Life Balance</string>
     <string name="actions">Actions</string>
+    <string name="blank_field_message">Please do not leave any field blank</string>
     <string name="change">Change</string>
     <string name="chart">Chart</string>
     <string name="confirm">Confirm</string>
@@ -20,7 +21,7 @@
     <string name="save">Save</string>
     <string name="success_message">Your action has been saved!</string>
     <string name="suggestion_line_1">One area that needs attention is</string>
-    <string name="suggestion_line_2">A past action you\'ve taken is</string>
+    <string name="suggestion_line_2">A past action is</string>
     <string name="video_default">8KkKuTCFvzI</string>
     <string name="video_family">KktuoQwb3vQ</string>
     <string name="video_finances">PsihkFWDt3Y</string>
@@ -29,7 +30,6 @@
     <string name="video_learning">5MgBikgcWnY</string>
     <string name="video_title">You are watching a video about %1$s</string>
     <string name="video_work">rrkrvAUbU9Y</string>
-    <string name="view_chart">View Chart</string>
-    <string name="warning_message">This action will reset chart values to 0</string>
+    <string name="warning_message">This action will reset chart values to 0. Would you like to continue?</string>
     <string name="your_life_areas">Your Life Areas</string>
 </resources>

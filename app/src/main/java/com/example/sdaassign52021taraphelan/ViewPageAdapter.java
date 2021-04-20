@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 /**
  * ViewPageAdapter
+ *
  * @author Chris Coughlan 2019
  * updated by Tara Phelan 2021
  */
@@ -24,29 +25,25 @@ public class ViewPageAdapter extends FragmentPagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
-
         Fragment fragment = new Fragment();
 
-        //finds the tab position (note array starts at 0)
-        position = position+1;
+        // Finds the tab position (note array starts at 0)
+        position = position + 1;
 
-        //finds the fragment
-        switch (position)
-        {
+        // Finds the fragment
+        switch (position) {
             case 1:
-                //code
                 fragment = new Chart();
                 break;
             case 2:
-                //code
                 fragment = new Actions();
                 break;
             case 3:
-                //code
                 fragment = new LifeAreas();
                 break;
         }
 
+        // Returns the Fragment
         return fragment;
     }
 
@@ -57,29 +54,23 @@ public class ViewPageAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        position = position+1;
-
+        position = position + 1;
         CharSequence tabTitle;
 
-        //finds the fragment
-        switch (position)
-        {
+        // Finds the Fragment
+        switch (position) {
             case 1:
-                //code
                 tabTitle = context.getString(R.string.chart);
                 break;
             case 2:
-                //code
                 tabTitle = context.getString(R.string.actions);
                 break;
             case 3:
-                //code
                 tabTitle = context.getString(R.string.life_areas);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + position);
         }
-
         return tabTitle;
     }
 }
