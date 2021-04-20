@@ -1,6 +1,8 @@
 package com.example.sdaassign52021taraphelan;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -43,6 +45,12 @@ public class LifeAreas extends Fragment {
     private Button restoreDefaults;
     public String[] lifeAreasFromSharedPreferences;
     public String yourLifeAreas;
+    private String lifeAreaValue1;
+    private String lifeAreaValue2;
+    private String lifeAreaValue3;
+    private String lifeAreaValue4;
+    private String lifeAreaValue5;
+    private String lifeAreaValue6;
     public SharedPreferences sharedPreferences;
     String[] defaultLifeAreas;
 
@@ -176,12 +184,12 @@ public class LifeAreas extends Fragment {
                 /*for (int i = 0; i < lifeAreaEditTexts.length; i++) {
                     lifeAreaEditTexts[i].setVisibility(VISIBLE);
                 }*/
-                String lifeAreaValue1 = lifeAreaEditTexts[0].getText().toString();
-                String lifeAreaValue2 = lifeAreaEditTexts[1].getText().toString();
-                String lifeAreaValue3 = lifeAreaEditTexts[2].getText().toString();
-                String lifeAreaValue4 = lifeAreaEditTexts[3].getText().toString();
-                String lifeAreaValue5 = lifeAreaEditTexts[4].getText().toString();
-                String lifeAreaValue6 = lifeAreaEditTexts[5].getText().toString();
+                lifeAreaValue1 = lifeAreaEditTexts[0].getText().toString();
+                lifeAreaValue2 = lifeAreaEditTexts[1].getText().toString();
+                lifeAreaValue3 = lifeAreaEditTexts[2].getText().toString();
+                lifeAreaValue4 = lifeAreaEditTexts[3].getText().toString();
+                lifeAreaValue5 = lifeAreaEditTexts[4].getText().toString();
+                lifeAreaValue6 = lifeAreaEditTexts[5].getText().toString();
 
 
 
@@ -192,73 +200,68 @@ public class LifeAreas extends Fragment {
 
                 else {
 
-                    Log.i(TAG, "else clause. lifeAreaValue1 = " + lifeAreaValue1);
-                    //saving user inputs to SharedPreferences
-                    SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString(LIFE_AREA_1, lifeAreaValue1);
+                    //AlertDialog code found at https://stackoverflow.com/questions/36747369/how-to-show-a-pop-up-in-android-studio-to-confirm-an-order
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setCancelable(true);
+                    builder.setMessage(getString(R.string.warning_message));
 
-                    /*editor.putString(lifeAreaValue2, LIFE_AREA_2);
-                    editor.putString(lifeAreaValue3, LIFE_AREA_3);
-                    editor.putString(lifeAreaValue4, LIFE_AREA_4);
-                    editor.putString(lifeAreaValue5, LIFE_AREA_5);
-                    editor.putString(lifeAreaValue6, LIFE_AREA_6);*/
+                    // Runs if user selects Confirm button
+                    builder.setPositiveButton(getString(R.string.confirm),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                    editor.putString(LIFE_AREA_2, lifeAreaValue2);
-                    editor.putString(LIFE_AREA_3, lifeAreaValue3);
-                    editor.putString(LIFE_AREA_4, lifeAreaValue4);
-                    editor.putString(LIFE_AREA_5, lifeAreaValue5);
-                    editor.putString(LIFE_AREA_6, lifeAreaValue6);
+                                    //saving user inputs to SharedPreferences
+                                    SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putString(LIFE_AREA_1, lifeAreaValue1);
+                                    editor.putString(LIFE_AREA_2, lifeAreaValue2);
+                                    editor.putString(LIFE_AREA_3, lifeAreaValue3);
+                                    editor.putString(LIFE_AREA_4, lifeAreaValue4);
+                                    editor.putString(LIFE_AREA_5, lifeAreaValue5);
+                                    editor.putString(LIFE_AREA_6, lifeAreaValue6);
 
-                    editor.putInt(COUNTER_1, 0);
-                    editor.putInt(COUNTER_2, 0);
-                    editor.putInt(COUNTER_3, 0);
-                    editor.putInt(COUNTER_4, 0);
-                    editor.putInt(COUNTER_5, 0);
-                    editor.putInt(COUNTER_6, 0);
+                                    // Resets local counters to 0
+                                    editor.putInt(COUNTER_1, 0);
+                                    editor.putInt(COUNTER_2, 0);
+                                    editor.putInt(COUNTER_3, 0);
+                                    editor.putInt(COUNTER_4, 0);
+                                    editor.putInt(COUNTER_5, 0);
+                                    editor.putInt(COUNTER_6, 0);
+                                    editor.apply();
 
+                                    Log.i(TAG, "LIFE_AREA_5: " + LIFE_AREA_5);
 
-                    editor.apply();
-                    Log.i(TAG, "LIFE_AREA_5: " + LIFE_AREA_5);
-                    Log.i(TAG, "lifeArea5: " + sharedPreferences.getString(LIFE_AREA_5, "somrthing"));
-                    hideEditTexts();
-                    saveLifeAreas.setVisibility(GONE);
-                    restoreDefaults.setVisibility(GONE);
-                    changeLifeAreas.setVisibility(VISIBLE);
-                    setLifeAreasDisplay();
+                                    // Sets up view to display new life areas
+                                    hideEditTexts();
+                                    saveLifeAreas.setVisibility(GONE);
+                                    restoreDefaults.setVisibility(GONE);
+                                    changeLifeAreas.setVisibility(VISIBLE);
+                                    setLifeAreasDisplay();
+                                }
+                            });
+
+                    // Runs if user selects Cancel button
+                    builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            // Sets up view to display existing life areas
+                            hideEditTexts();
+                            saveLifeAreas.setVisibility(GONE);
+                            restoreDefaults.setVisibility(GONE);
+                            changeLifeAreas.setVisibility(VISIBLE);
+                            setLifeAreasDisplay();
+
+                        }
+                    });
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
                 }
 
             }
         });
-
-        /*
-        //setting up UI elements if no SharedPreferences values exist
-        if (usernameFromSharedPrefs.equals(notSignedInMessage)) {
-            Log.i(TAG, "if clause");
-            savedLoginsDisplayView.setText(notSignedInMessage);
-            hideSignInFields();
-
-            //setting up UI elements if SharedPreferences values exist
-        } else {
-            Log.i(TAG, "else clause");
-
-            //building a String to display login details in the TextView
-            String signInSummary = String.format(getString(R.string.signed_in_as),
-                    getString(R.string.username),
-                    usernameFromSharedPrefs,
-                    getString(R.string.email_address),
-                    sharedPreferences.getString(EMAIL, ""),
-                    getString(R.string.borrower_id),
-                    sharedPreferences.getString(BORROWER_ID, ""));
-            savedLoginsDisplayView.setText(signInSummary);
-            savedLoginsDisplayView.setVisibility(View.VISIBLE);
-
-            //updating the UI elements to show the user is signed in
-            signInOrOutButton.setText(R.string.sign_out);
-            signInOrOutButton.setVisibility(View.VISIBLE);
-            hideSignInFields();
-
-         */
 
         return root;
     }

@@ -5,6 +5,7 @@
     <string name="actions">Actions</string>
     <string name="change">Change</string>
     <string name="chart">Chart</string>
+    <string name="confirm">Confirm</string>
     <string name="default_life_area_1">health</string>
     <string name="default_life_area_2">family</string>
     <string name="default_life_area_3">work</string>
@@ -26,8 +27,9 @@
     <string name="video_friends">rFpDK2KhAgw</string>
     <string name="video_health">PI5V1-IFvlI</string>
     <string name="video_learning">5MgBikgcWnY</string>
-    <string name="video_title">This video is about %1$s</string>
+    <string name="video_title">You are watching a video about %1$s</string>
     <string name="video_work">rrkrvAUbU9Y</string>
     <string name="view_chart">View Chart</string>
+    <string name="warning_message">This action will reset chart values to 0</string>
     <string name="your_life_areas">Your Life Areas</string>
 </resources>
